@@ -34,7 +34,7 @@ export default function ProductPage() {
   return (
     <>
       {/* Breadcrumb */}
-      <div style={{ paddingTop: 'var(--nav-h)', background: 'var(--plum)', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ paddingTop: 'var(--nav-h)', background: 'var(--purple-deep)', borderBottom: '1px solid var(--border)' }}>
         <div className="container" style={{ padding: '14px 48px' }}>
           <nav style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--cream-muted)', display: 'flex', gap: '8px', alignItems: 'center' }}>
             <Link href="/">Home</Link><span>›</span>
@@ -45,13 +45,13 @@ export default function ProductPage() {
       </div>
 
       {/* Main */}
-      <section style={{ padding: '56px 0 96px', background: 'var(--plum-deep)' }}>
+      <section style={{ padding: '56px 0 96px', background: 'var(--black)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '72px', alignItems: 'start' }} className="product-grid">
 
             {/* Image */}
             <div style={{ position: 'sticky', top: 'calc(var(--nav-h) + 24px)' }}>
-              <div style={{ position: 'relative', aspectRatio: '1/1', background: 'var(--plum)', border: '1px solid var(--border-mid)', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', aspectRatio: '1/1', background: 'var(--purple-deep)', border: '1px solid var(--border-mid)', overflow: 'hidden' }}>
                 <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} />
                 {p.badge && <span className="badge">{p.badge}</span>}
               </div>
@@ -110,7 +110,7 @@ export default function ProductPage() {
 
       {/* Related */}
       {related.length > 0 && (
-        <section style={{ padding: '64px 0 96px', background: 'var(--plum)', borderTop: '1px solid var(--border)' }}>
+        <section style={{ padding: '64px 0 96px', background: 'var(--purple-deep)', borderTop: '1px solid var(--border)' }}>
           <div className="container">
             <div className="eyebrow" style={{ marginBottom: '12px' }}>More like this</div>
             <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 300, color: 'var(--cream)', marginBottom: '36px' }}>

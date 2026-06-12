@@ -25,7 +25,7 @@ export default function Nav() {
         height: 'var(--nav-h)', zIndex: 100,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 48px',
-        background: scrolled ? 'rgba(30,5,22,0.97)' : 'rgba(30,5,22,0.85)',
+        background: scrolled ? 'rgba(6,3,10,0.97)' : 'rgba(6,3,10,0.82)',
         backdropFilter: 'blur(16px)',
         borderBottom: '1px solid rgba(210,170,100,0.2)',
         transition: 'background 0.3s',
@@ -101,7 +101,7 @@ export default function Nav() {
 
       {/* Mobile menu */}
       {open && (
-        <div style={{ position: 'fixed', top: 'var(--nav-h)', inset: '0', background: 'var(--plum-deep)', zIndex: 99, display: 'flex', flexDirection: 'column', padding: '48px 20px', borderTop: '1px solid var(--border)' }}>
+        <div style={{ position: 'fixed', top: 'var(--nav-h)', inset: '0', background: 'var(--black-2)', zIndex: 99, display: 'flex', flexDirection: 'column', padding: '48px 20px', borderTop: '1px solid var(--border)' }}>
           {[{ href: '/shop', label: 'Templates' }, { href: '/about', label: 'About' }, { href: '/cart', label: 'Cart' }].map(l => (
             <Link key={l.href} href={l.href} style={{ fontFamily: 'var(--font-display)', fontSize: '40px', fontWeight: 300, color: 'var(--cream)', padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
               {l.label}

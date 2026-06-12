@@ -32,7 +32,7 @@ export default function CartPage() {
         </div>
       </div>
 
-      <div style={{ padding: '48px 0 96px', background: 'var(--plum-deep)', minHeight: '60vh' }}>
+      <div style={{ padding: '48px 0 96px', background: 'var(--black)', minHeight: '60vh' }}>
         <div className="container">
           {items.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '80px 0' }}>

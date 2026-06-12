@@ -22,7 +22,7 @@ export default function ShopPage() {
       </div>
 
       {/* Sticky filter bar */}
-      <div style={{ position: 'sticky', top: 'var(--nav-h)', zIndex: 50, background: 'rgba(30,5,22,0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)' }}>
+      <div style={{ position: 'sticky', top: 'var(--nav-h)', zIndex: 50, background: 'rgba(6,3,10,0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ display: 'flex', overflowX: 'auto', scrollbarWidth: 'none' }}>
             {CATEGORIES.map(c => (
@@ -41,7 +41,7 @@ export default function ShopPage() {
         </div>
       </div>
 
-      <div style={{ padding: '56px 0 96px', background: 'var(--plum-deep)' }}>
+      <div style={{ padding: '56px 0 96px', background: 'var(--black)' }}>
         <div className="container">
           <div style={{ marginBottom: '28px' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--cream-muted)' }}>

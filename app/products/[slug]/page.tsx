@@ -3,6 +3,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getProductBySlug, PRODUCTS } from '@/lib/products';
+import ProductCard from '@/components/ProductCard';
 import { useCart } from '@/lib/cartContext';
 import { useState } from 'react';
 

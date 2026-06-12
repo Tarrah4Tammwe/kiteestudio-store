@@ -55,9 +55,7 @@ export default function CartPage() {
                       <div style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--cream-muted)', letterSpacing: '0.06em' }}>Digital product — instant download</div>
                     </div>
                     <div style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 600, color: 'var(--gold)', flexShrink: 0 }}>£{item.product.price}</div>
-                    <button onClick={() => removeItem(item.product.slug)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--cream-muted)', padding: '8px', transition: 'color 0.2s', flexShrink: 0 }}
-                      onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream-dim)')}
-                      onMouseLeave={e => (e.currentTarget.style.color = 'var(--cream-muted)')}>
+                    <button onClick={() => removeItem(item.product.slug)} className="btn-remove">
                       Remove
                     </button>
                   </div>
@@ -93,9 +91,7 @@ export default function CartPage() {
                 </p>
 
                 <div style={{ marginTop: '18px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
-                  <Link href="/shop" style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--cream-muted)', transition: 'color 0.2s' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'var(--cream-muted)')}>
+                  <Link href="/shop" className="cart-continue">
                     ← Continue shopping
                   </Link>
                 </div>

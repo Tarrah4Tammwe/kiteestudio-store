@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 
 export default function Footer() {
@@ -28,11 +29,7 @@ export default function Footer() {
                 ['/products/shop-website-template', 'Shop & Artisan'],
                 ['/products/personal-trainer-website-template', 'Personal Trainer'],
               ].map(([href, label]) => (
-                <Link key={href} href={href} style={{ fontSize: '13px', color: 'var(--cream-dim)', transition: 'color 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--cream-dim)')}>
-                  {label}
-                </Link>
+                <Link key={href} href={href} className="footer-link">{label}</Link>
               ))}
             </div>
           </div>
@@ -41,11 +38,7 @@ export default function Footer() {
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '20px' }}>Info</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[['/shop', 'All Templates'], ['/about', 'About KiTee Studio']].map(([href, label]) => (
-                <Link key={href} href={href} style={{ fontSize: '13px', color: 'var(--cream-dim)', transition: 'color 0.2s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--cream-dim)')}>
-                  {label}
-                </Link>
+                <Link key={href} href={href} className="footer-link">{label}</Link>
               ))}
             </div>
           </div>
@@ -61,6 +54,8 @@ export default function Footer() {
         </div>
       </div>
       <style>{`
+        .footer-link { font-size: 13px; color: var(--cream-dim); transition: color 0.2s; }
+        .footer-link:hover { color: var(--gold); }
         @media (max-width: 768px) {
           .footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
           .footer-grid > div:first-child { grid-column: 1 / -1; }

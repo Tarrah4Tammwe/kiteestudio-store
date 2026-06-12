@@ -297,3 +297,20 @@ a { text-decoration: none; color: inherit; }
   .container { padding: 0 20px; }
   .page-header { padding: calc(var(--nav-h) + 48px) 0 36px; }
 }
+
+/* ─── Cart specific ─── */
+.btn-remove {
+  background: none; border: none; cursor: pointer;
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--cream-muted); padding: 8px;
+  transition: color 0.2s; flex-shrink: 0;
+}
+.btn-remove:hover { color: var(--cream-dim); }
+
+.cart-continue {
+  font-family: var(--font-mono); font-size: 10px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--cream-muted); transition: color 0.2s;
+}
+.cart-continue:hover { color: var(--gold); }

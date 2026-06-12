@@ -24,7 +24,7 @@ export default function ProductPage() {
   const related = PRODUCTS.filter(r => r.category === p.category && r.slug !== p.slug).slice(0, 3);
 
   function handleAdd() {
-    if (inCart) return;
+    if (!p || inCart) return;
     setAdding(true);
     addItem(p);
     setTimeout(() => { setAdding(false); setToast(true); setTimeout(() => setToast(false), 3000); }, 400);

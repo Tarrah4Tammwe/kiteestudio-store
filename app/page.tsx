@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const liveApps = PRODUCTS.filter(p => p.productType === 'app' && p.status === 'live');
 const liveTemplates = PRODUCTS.filter(p => p.productType === 'template' && p.status === 'live');
 
-const marqueeItems = ['ADHD Tools', '✦', 'Gym Tracker', '✦', 'Website Templates', '✦', 'Offline Apps', '✦', 'No Subscriptions', '✦', 'Buy Once Own Forever', '✦', 'ADHD Tools', '✦', 'Gym Tracker', '✦', 'Website Templates', '✦', 'Offline Apps', '✦', 'No Subscriptions', '✦', 'Buy Once Own Forever', '✦'];
+const marqueeItems = ['AuDHD Tools', '✦', 'Gym Tracker', '✦', 'Website Templates', '✦', 'Offline Apps', '✦', 'No Subscriptions', '✦', 'Buy Once Own Forever', '✦', 'AuDHD Tools', '✦', 'Gym Tracker', '✦', 'Website Templates', '✦', 'Offline Apps', '✦', 'No Subscriptions', '✦', 'Buy Once Own Forever', '✦'];
 
 export default function HomePage() {
   return (
@@ -115,7 +115,7 @@ export default function HomePage() {
                 So I started building what I actually needed: <strong style={{ color: 'var(--cream)' }}>single-file utility apps</strong> that live on your phone, work offline, and are yours to keep. No account. No monthly fee. No syncing to someone else&apos;s server.
               </p>
               <p style={{ fontSize: '16px', color: 'var(--cream-dim)', lineHeight: 1.85 }}>
-                And then I realised — this isn&apos;t just an ADHD problem. Everyone deserves tools that actually work. That&apos;s what I build here.
+                And then I realised — this isn&apos;t just an AuDHD problem. Everyone deserves tools that actually work. That&apos;s what I build here.
               </p>
             </div>
 
@@ -308,3 +308,4 @@ export default function HomePage() {
     </>
   );
 }
+

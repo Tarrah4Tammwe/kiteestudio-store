@@ -56,7 +56,7 @@ export const TEMPLATE_CATEGORIES: { id: TemplateCategory; label: string }[] = [
 export const APP_CATEGORIES: { id: AppCategory; label: string; description: string }[] = [
   {
     id: 'adhd-neurodivergent',
-    label: 'ADHD & Neurodivergent',
+    label: 'AuDHD & Neurodivergent',
     description: 'Tools designed for neurodivergent brains — built by one.',
   },
   {
@@ -86,7 +86,7 @@ export const PRODUCTS: Product[] = [
     priceId: process.env.NEXT_PUBLIC_PRICE_BURNOUT || '',
     productType: 'app',
     category: 'adhd-neurodivergent',
-    categoryLabel: 'ADHD & Neurodivergent',
+    categoryLabel: 'AuDHD & Neurodivergent',
     categorySlug: 'adhd-neurodivergent',
     status: 'live',
     image: '/images/products/burnout-01.jpg',
@@ -98,8 +98,8 @@ export const PRODUCTS: Product[] = [
       'Works fully offline — no internet needed',
       'Download once, yours forever',
     ],
-    seoTitle: 'Burnout Recovery App for ADHD & Neurodivergent People',
-    seoDescription: 'A downloadable offline app to track burnout, map your energy, and build a real recovery plan. Built for ADHD and neurodivergent brains.',
+    seoTitle: 'Burnout Recovery App for AuDHD & Neurodivergent People',
+    seoDescription: 'A downloadable offline app to track burnout, map your energy, and build a real recovery plan. Built for AuDHD and neurodivergent brains.',
   },
 
   {
@@ -107,12 +107,12 @@ export const PRODUCTS: Product[] = [
     slug: 'post-diagnosis-rebuild-kit',
     name: 'Post-Diagnosis Rebuild Kit',
     tagline: 'Process your diagnosis. Rebuild a life that actually fits your brain.',
-    description: 'Everything you need after a late ADHD or autism diagnosis — a guided app to process the grief, reclaim your identity, and start building life on your own terms. No toxic positivity. Just tools.',
+    description: 'Everything you need after a late AuDHD diagnosis — a guided app to process the grief, reclaim your identity, and start building life on your own terms. No toxic positivity. Just tools.',
     price: 0,
     priceId: process.env.NEXT_PUBLIC_PRICE_REBUILD || '',
     productType: 'app',
     category: 'adhd-neurodivergent',
-    categoryLabel: 'ADHD & Neurodivergent',
+    categoryLabel: 'AuDHD & Neurodivergent',
     categorySlug: 'adhd-neurodivergent',
     status: 'live',
     image: '/images/products/rebuild-01.jpg',
@@ -125,7 +125,7 @@ export const PRODUCTS: Product[] = [
       'Export your data anytime',
     ],
     seoTitle: 'Late ADHD Diagnosis App — Post-Diagnosis Rebuild Kit',
-    seoDescription: 'A downloadable app for processing a late ADHD or autism diagnosis. Guided tools for identity, grief, and rebuilding — offline, no subscription.',
+    seoDescription: 'A downloadable app for processing a late AuDHD diagnosis. Guided tools for identity, grief, and rebuilding — offline, no subscription.',
   },
 
   {
@@ -138,32 +138,32 @@ export const PRODUCTS: Product[] = [
     priceId: '',
     productType: 'app',
     category: 'adhd-neurodivergent',
-    categoryLabel: 'ADHD & Neurodivergent',
+    categoryLabel: 'AuDHD & Neurodivergent',
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/unmasking-01.jpg',
     features: [],
-    seoTitle: 'ADHD Unmasking App — Unmasking Roadmap',
+    seoTitle: 'AuDHD Unmasking App — Unmasking Roadmap',
     seoDescription: 'A downloadable tool for neurodivergent people to identify masking patterns and build a more authentic way of showing up.',
   },
 
   {
     id: 'adhd-relationships-playbook',
     slug: 'adhd-relationships-playbook',
-    name: 'ADHD Relationships Playbook',
+    name: 'AuDHD Relationships Playbook',
     tagline: 'Navigate connection with a neurodivergent brain — yours or theirs.',
-    description: 'Tools for communication, conflict, and connection when ADHD or autism is part of the picture. Whether you\'re the neurodivergent one or you love someone who is.',
+    description: 'Tools for communication, conflict, and connection when AuDHD is part of the picture. Whether you\'re the neurodivergent one or you love someone who is.',
     price: 0,
     priceId: '',
     productType: 'app',
     category: 'adhd-neurodivergent',
-    categoryLabel: 'ADHD & Neurodivergent',
+    categoryLabel: 'AuDHD & Neurodivergent',
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/relationships-01.jpg',
     features: [],
-    seoTitle: 'ADHD Relationships App — Communication & Connection Tools',
-    seoDescription: 'A downloadable app for navigating relationships with ADHD or autism. Tools for communication, conflict, and connection.',
+    seoTitle: 'AuDHD Relationships App — Communication & Connection Tools',
+    seoDescription: 'A downloadable app for navigating relationships with AuDHD. Tools for communication, conflict, and connection.',
   },
 
   {
@@ -422,3 +422,4 @@ export function getAppsByCategory(category: AppCategory) {
 export function getLiveProducts() {
   return PRODUCTS.filter(p => p.status === 'live');
 }
+

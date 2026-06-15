@@ -106,21 +106,34 @@ export default function AdminPage() {
   }
 
   // ── ADMIN DASHBOARD ──
-  const s: Record<string, React.CSSProperties> = {
+  const sBase: Record<string, React.CSSProperties> = {
     wrap: { minHeight: '100vh', background: 'var(--black)', paddingTop: 'var(--nav-h)' },
     header: { background: 'var(--black-3)', borderBottom: '1px solid var(--border)', padding: '28px 48px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' },
     tabs: { display: 'flex', borderBottom: '1px solid var(--border)', padding: '0 48px', background: 'var(--black-2)' },
-    tab: (active: boolean) => ({ background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase' as const, color: active ? 'var(--gold)' : 'var(--cream-dim)', padding: '16px 18px', borderBottom: active ? '2px solid var(--gold-pure)' : '2px solid transparent', transition: 'all 0.2s' }),
     body: { padding: '40px 48px', maxWidth: '1100px' },
     table: { width: '100%', borderCollapse: 'collapse' as const },
     th: { fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.2em', textTransform: 'uppercase' as const, color: 'var(--cream-muted)', padding: '10px 14px', textAlign: 'left' as const, borderBottom: '1px solid var(--border)' },
     td: { padding: '14px 14px', borderBottom: '1px solid var(--border)', fontSize: '13px', color: 'var(--cream-dim)', verticalAlign: 'middle' as const },
   };
 
+  const tabStyle = (active: boolean): React.CSSProperties => ({
+    background: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    fontFamily: 'var(--font-mono)',
+    fontSize: '10px',
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase' as const,
+    color: active ? 'var(--gold)' : 'var(--cream-dim)',
+    padding: '16px 18px',
+    borderBottom: active ? '2px solid var(--gold-pure)' : '2px solid transparent',
+    transition: 'all 0.2s',
+  });
+
   return (
-    <div style={s.wrap}>
+    <div style={sBase.wrap}>
       {/* Header */}
-      <div style={s.header}>
+      <div style={sBase.header}>
         <div>
           <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 600, color: 'var(--gold)' }}>Admin Panel</div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--cream-muted)', marginTop: '4px' }}>KiTee Studio</div>
@@ -132,15 +145,15 @@ export default function AdminPage() {
       </div>
 
       {/* Tabs */}
-      <div style={s.tabs}>
+      <div style={sBase.tabs}>
         {(['products', 'orders'] as Tab[]).map(t => (
-          <button key={t} style={s.tab(tab === t)} onClick={() => setTab(t)}>
+          <button key={t} style={tabStyle(tab === t)} onClick={() => setTab(t)}>
             {t === 'products' ? 'Products' : 'Orders'}
           </button>
         ))}
       </div>
 
-      <div style={s.body}>
+      <div style={sBase.body}>
         {loading ? (
           <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--cream-muted)', padding: '48px 0' }}>Loading...</p>
         ) : tab === 'products' ? (
@@ -151,17 +164,17 @@ export default function AdminPage() {
               <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '26px', fontWeight: 300, color: 'var(--cream)', marginBottom: '6px' }}>Products</h2>
               <p style={{ fontSize: '13px', color: 'var(--cream-muted)' }}>Set prices in GBP. Prices display in the visitor&apos;s local currency on the storefront.</p>
             </div>
-            <table style={s.table}>
+            <table style={sBase.table}>
               <thead>
                 <tr>
                   {['Product', 'Type', 'Category', 'Price (GBP)', 'Status', 'Actions'].map(h => (
-                    <th key={h} style={s.th}>{h}</th>
+                    <th key={h} style={sBase.th}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {products.map((p: any) => (
-                  <AdminProductRow key={p.id} p={p} saving={saving} onPrice={updatePrice} onToggle={toggleStatus} td={s.td} />
+                  <AdminProductRow key={p.id} p={p} saving={saving} onPrice={updatePrice} onToggle={toggleStatus} td={sBase.td} />
                 ))}
               </tbody>
             </table>
@@ -178,22 +191,22 @@ export default function AdminPage() {
             {orders.length === 0 ? (
               <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--cream-muted)', padding: '40px 0' }}>No orders yet.</p>
             ) : (
-              <table style={s.table}>
+              <table style={sBase.table}>
                 <thead>
                   <tr>
                     {['Date', 'Customer', 'Product', 'Amount', 'Status'].map(h => (
-                      <th key={h} style={s.th}>{h}</th>
+                      <th key={h} style={sBase.th}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map((o: any) => (
                     <tr key={o.id}>
-                      <td style={s.td}>{new Date(o.created_at).toLocaleDateString('en-GB')}</td>
-                      <td style={s.td}>{o.customer_email || '—'}</td>
-                      <td style={s.td}>{o.product_name || '—'}</td>
-                      <td style={s.td} >£{(o.amount_total / 100).toFixed(2)}</td>
-                      <td style={s.td}>
+                      <td style={sBase.td}>{new Date(o.created_at).toLocaleDateString('en-GB')}</td>
+                      <td style={sBase.td}>{o.customer_email || '—'}</td>
+                      <td style={sBase.td}>{o.product_name || '—'}</td>
+                      <td style={sBase.td}>£{(o.amount_total / 100).toFixed(2)}</td>
+                      <td style={sBase.td}>
                         <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: o.status === 'complete' ? 'rgba(212,175,55,0.1)' : 'rgba(60,10,40,0.4)', color: o.status === 'complete' ? 'var(--gold)' : 'var(--cream-muted)', border: `1px solid ${o.status === 'complete' ? 'var(--border-mid)' : 'var(--border)'}`, padding: '3px 8px' }}>
                           {o.status}
                         </span>

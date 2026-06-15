@@ -18,6 +18,13 @@ export default function Nav() {
 
   useEffect(() => setOpen(false), [pathname]);
 
+  const navLinks = [
+    { href: '/shop', label: 'Shop' },
+    { href: '/shop#apps', label: 'Apps' },
+    { href: '/shop#templates', label: 'Templates' },
+    { href: '/#why', label: 'About' },
+  ];
+
   return (
     <>
       <nav style={{
@@ -30,10 +37,8 @@ export default function Nav() {
         borderBottom: '1px solid rgba(210,170,100,0.2)',
         transition: 'background 0.3s',
       }}>
-
         {/* Logo */}
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          {/* Arch starburst mark */}
           <svg width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 14C1 6.8 6.8 1 14 1C21.2 1 27 6.8 27 14V31H1V14Z" stroke="#D2AA64" strokeWidth="1.2" fill="none"/>
             <line x1="14" y1="5" x2="14" y2="9.5" stroke="#D2AA64" strokeWidth="1"/>
@@ -45,21 +50,18 @@ export default function Nav() {
             <line x1="14" y1="5" x2="13.5" y2="1.5" stroke="#D2AA64" strokeWidth="0.8"/>
           </svg>
           <div>
-            <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 600, color: 'var(--gold)', letterSpacing: '0.02em', lineHeight: 1.1 }}>
-              KiTee
-            </div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '7px', letterSpacing: '0.35em', textTransform: 'uppercase', color: 'var(--gold-dim)', lineHeight: 1 }}>
-              Studio
-            </div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 600, color: 'var(--gold)', letterSpacing: '0.02em', lineHeight: 1.1 }}>KiTee</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '7px', letterSpacing: '0.35em', textTransform: 'uppercase', color: 'var(--gold-dim)', lineHeight: 1 }}>Studio</div>
           </div>
         </Link>
 
         {/* Desktop nav */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '36px' }} className="nav-desktop">
-          {[{ href: '/shop', label: 'Templates' }, { href: '/about', label: 'About' }].map(l => (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '32px' }} className="nav-desktop">
+          {navLinks.map(l => (
             <Link key={l.href} href={l.href} style={{
               fontFamily: 'var(--font-mono)', fontSize: '11px', letterSpacing: '0.14em',
-              textTransform: 'uppercase', color: pathname.startsWith(l.href) ? 'var(--gold)' : 'var(--cream-dim)',
+              textTransform: 'uppercase',
+              color: pathname.startsWith(l.href.split('#')[0]) && l.href !== '/#why' ? 'var(--gold)' : 'var(--cream-dim)',
               transition: 'color 0.2s',
             }}>
               {l.label}
@@ -74,18 +76,11 @@ export default function Nav() {
           }}>
             Cart
             {count > 0 && (
-              <span style={{
-                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                width: '17px', height: '17px', borderRadius: '50%',
-                background: 'var(--gold)', color: 'var(--plum-deep)',
-                fontSize: '9px', fontWeight: 700, lineHeight: 1,
-              }}>{count}</span>
+              <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '17px', height: '17px', borderRadius: '50%', background: 'var(--gold)', color: 'var(--plum-deep)', fontSize: '9px', fontWeight: 700 }}>{count}</span>
             )}
           </Link>
 
-          <Link href="/shop" className="btn-gold" style={{ padding: '10px 22px', fontSize: '10px' }}>
-            Shop Now
-          </Link>
+          <Link href="/shop" className="btn-gold" style={{ padding: '10px 22px', fontSize: '10px' }}>Shop Now</Link>
         </div>
 
         {/* Mobile */}
@@ -102,8 +97,8 @@ export default function Nav() {
       {/* Mobile menu */}
       {open && (
         <div style={{ position: 'fixed', top: 'var(--nav-h)', inset: '0', background: 'var(--black-2)', zIndex: 99, display: 'flex', flexDirection: 'column', padding: '48px 20px', borderTop: '1px solid var(--border)' }}>
-          {[{ href: '/shop', label: 'Templates' }, { href: '/about', label: 'About' }, { href: '/cart', label: 'Cart' }].map(l => (
-            <Link key={l.href} href={l.href} style={{ fontFamily: 'var(--font-display)', fontSize: '40px', fontWeight: 300, color: 'var(--cream)', padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
+          {[...navLinks, { href: '/cart', label: 'Cart' }].map(l => (
+            <Link key={l.href} href={l.href} style={{ fontFamily: 'var(--font-display)', fontSize: '36px', fontWeight: 300, color: 'var(--cream)', padding: '14px 0', borderBottom: '1px solid var(--border)' }}>
               {l.label}
             </Link>
           ))}

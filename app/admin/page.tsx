@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, CSSProperties, ReactNode, FormEvent } from 'react';
 
 type Tab = 'dashboard' | 'products' | 'orders' | 'discounts' | 'settings';
 
@@ -27,21 +27,22 @@ const EMPTY_PRODUCT: Partial<Product> = {
   status: 'draft', product_type: 'app', category_label: '', category_slug: '',
   stripe_price_id: '', seo_title: '', seo_description: '', file_url: '', image_url: '', features: [],
 };
-const EMPTY_CODE = { code: '', type: 'percent' as const, value: 10, max_uses: undefined as number | undefined, expires_at: '', active: true };
+type CodeForm = { code: string; type: 'percent' | 'fixed'; value: number; max_uses: number | undefined; expires_at: string; active: boolean };
+const EMPTY_CODE: CodeForm = { code: '', type: 'percent', value: 10, max_uses: undefined, expires_at: '', active: true };
 
 // ── SHARED STYLES ──────────────────────────────────
 const S = {
-  input: { background: 'var(--black-2)', border: '1px solid var(--border)', color: 'var(--cream)', fontFamily: 'var(--font-body)', fontSize: '14px', padding: '10px 14px', width: '100%', outline: 'none', borderRadius: '2px' } as React.CSSProperties,
-  textarea: { background: 'var(--black-2)', border: '1px solid var(--border)', color: 'var(--cream)', fontFamily: 'var(--font-body)', fontSize: '14px', padding: '10px 14px', width: '100%', outline: 'none', borderRadius: '2px', minHeight: '80px', resize: 'vertical' as const } as React.CSSProperties,
-  select: { background: 'var(--black-2)', border: '1px solid var(--border)', color: 'var(--cream)', fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '10px 14px', width: '100%', outline: 'none', borderRadius: '2px' } as React.CSSProperties,
+  input: { background: 'var(--black-2)', border: '1px solid var(--border)', color: 'var(--cream)', fontFamily: 'var(--font-body)', fontSize: '14px', padding: '10px 14px', width: '100%', outline: 'none', borderRadius: '2px' } as CSSProperties,
+  textarea: { background: 'var(--black-2)', border: '1px solid var(--border)', color: 'var(--cream)', fontFamily: 'var(--font-body)', fontSize: '14px', padding: '10px 14px', width: '100%', outline: 'none', borderRadius: '2px', minHeight: '80px', resize: 'vertical' as const } as CSSProperties,
+  select: { background: 'var(--black-2)', border: '1px solid var(--border)', color: 'var(--cream)', fontFamily: 'var(--font-mono)', fontSize: '11px', padding: '10px 14px', width: '100%', outline: 'none', borderRadius: '2px' } as CSSProperties,
   label: { fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.15em', textTransform: 'uppercase' as const, color: 'var(--cream-muted)', display: 'block', marginBottom: '6px' },
-  field: { marginBottom: '20px' } as React.CSSProperties,
-  grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' } as React.CSSProperties,
-  grid3: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' } as React.CSSProperties,
-  btnGold: { background: 'var(--gold-pure)', color: 'var(--black)', border: 'none', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase' as const, padding: '10px 20px', cursor: 'pointer', whiteSpace: 'nowrap' as const } as React.CSSProperties,
-  btnOutline: { background: 'none', border: '1px solid var(--border)', color: 'var(--cream-dim)', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '8px 16px', cursor: 'pointer', whiteSpace: 'nowrap' as const } as React.CSSProperties,
-  btnRed: { background: 'rgba(220,50,50,0.12)', border: '1px solid rgba(220,50,50,0.25)', color: '#e57373', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '8px 16px', cursor: 'pointer', whiteSpace: 'nowrap' as const } as React.CSSProperties,
-  btnGreen: { background: 'rgba(127,176,131,0.12)', border: '1px solid rgba(127,176,131,0.25)', color: '#7FB083', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '8px 16px', cursor: 'pointer', whiteSpace: 'nowrap' as const } as React.CSSProperties,
+  field: { marginBottom: '20px' } as CSSProperties,
+  grid2: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' } as CSSProperties,
+  grid3: { display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' } as CSSProperties,
+  btnGold: { background: 'var(--gold-pure)', color: 'var(--black)', border: 'none', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.14em', textTransform: 'uppercase' as const, padding: '10px 20px', cursor: 'pointer', whiteSpace: 'nowrap' as const } as CSSProperties,
+  btnOutline: { background: 'none', border: '1px solid var(--border)', color: 'var(--cream-dim)', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '8px 16px', cursor: 'pointer', whiteSpace: 'nowrap' as const } as CSSProperties,
+  btnRed: { background: 'rgba(220,50,50,0.12)', border: '1px solid rgba(220,50,50,0.25)', color: '#e57373', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '8px 16px', cursor: 'pointer', whiteSpace: 'nowrap' as const } as CSSProperties,
+  btnGreen: { background: 'rgba(127,176,131,0.12)', border: '1px solid rgba(127,176,131,0.25)', color: '#7FB083', fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.12em', textTransform: 'uppercase' as const, padding: '8px 16px', cursor: 'pointer', whiteSpace: 'nowrap' as const } as CSSProperties,
   th: { fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.2em', textTransform: 'uppercase' as const, color: 'var(--cream-muted)', padding: '10px 14px', textAlign: 'left' as const, borderBottom: '1px solid var(--border)' },
   td: { padding: '14px', borderBottom: '1px solid var(--border)', fontSize: '13px', color: 'var(--cream-dim)', verticalAlign: 'middle' as const },
   table: { width: '100%', borderCollapse: 'collapse' as const },
@@ -63,7 +64,7 @@ function StatusBadge({ status }: { status: string }) {
   return <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: bg, color, border: `1px solid ${color}33`, padding: '3px 9px' }}>{status}</span>;
 }
 
-function Modal({ title, onClose, children, wide }: { title: string; onClose: () => void; children: React.ReactNode; wide?: boolean }) {
+function Modal({ title, onClose, children, wide }: { title: string; onClose: () => void; children: ReactNode; wide?: boolean }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', zIndex: 1000, padding: '40px 20px', overflowY: 'auto' }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div style={{ background: 'var(--black-2)', border: '1px solid var(--border)', width: '100%', maxWidth: wide ? '800px' : '680px', padding: '40px', position: 'relative' }}>
@@ -119,7 +120,7 @@ export default function AdminPage() {
     setTimeout(() => setToast(''), 3500);
   }
 
-  async function login(e: React.FormEvent) {
+  async function login(e: FormEvent) {
     e.preventDefault();
     const res = await fetch('/api/admin/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: pw }) });
     if (res.ok) { sessionStorage.setItem('ks_admin', '1'); setAuthed(true); }
@@ -248,7 +249,7 @@ export default function AdminPage() {
   function fmtMoney(pence: number) { return `£${((pence || 0) / 100).toFixed(2)}`; }
   function fmtDate(d: string) { return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }); }
 
-  const tabStyle = (active: boolean): React.CSSProperties => ({
+  const tabStyle = (active: boolean): CSSProperties => ({
     background: 'none', border: 'none', cursor: 'pointer',
     fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.14em',
     textTransform: 'uppercase', color: active ? 'var(--gold)' : 'var(--cream-dim)',
@@ -595,7 +596,7 @@ export default function AdminPage() {
           <div style={S.grid2}>
             <div style={S.field}><label style={S.label}>Code *</label><input style={{ ...S.input, textTransform: 'uppercase', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }} value={newCode.code} onChange={e => setNewCode(c => ({ ...c, code: e.target.value.toUpperCase() }))} placeholder="e.g. LAUNCH20" /></div>
             <div style={S.field}><label style={S.label}>Type</label>
-              <select style={S.select} value={newCode.type} onChange={e => setNewCode(c => ({ ...c, type: e.target.value as 'percent' | 'fixed' }))}>
+              <select style={S.select} value={newCode.type} onChange={e => { const t = e.target.value as 'percent' | 'fixed'; setNewCode(c => ({ ...c, type: t })); }}>
                 <option value="percent">Percentage off</option><option value="fixed">Fixed amount off (£)</option>
               </select>
             </div>

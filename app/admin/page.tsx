@@ -8,8 +8,10 @@ interface Product {
   price_gbp: number; sale_price_gbp?: number; status: string; product_type: string;
   category_label: string; category_slug: string; stripe_price_id: string;
   seo_title: string; seo_description: string; file_url: string; image_url: string;
-  features: string[];
+  drive_folder_url?: string; features: string[];
 }
+interface BulkResult { row: number; slug: string; status: 'created' | 'skipped' | 'error'; message: string; }
+interface BulkSummary { total: number; created: number; skipped: number; errors: number; }
 interface Order {
   id: string; customer_email: string; customer_name: string; product_name: string;
   amount_paid: number; amount: number; status: string; created_at: string;
@@ -25,7 +27,7 @@ interface Settings { [key: string]: string; }
 const EMPTY_PRODUCT: Partial<Product> = {
   slug: '', name: '', tagline: '', description: '', price_gbp: 0, sale_price_gbp: undefined,
   status: 'draft', product_type: 'app', category_label: '', category_slug: '',
-  stripe_price_id: '', seo_title: '', seo_description: '', file_url: '', image_url: '', features: [],
+  stripe_price_id: '', seo_title: '', seo_description: '', file_url: '', image_url: '', drive_folder_url: '', features: [],
 };
 type CodeForm = { code: string; type: 'percent' | 'fixed'; value: number; max_uses: number | undefined; expires_at: string; active: boolean };
 const EMPTY_CODE: CodeForm = { code: '', type: 'percent', value: 10, max_uses: undefined, expires_at: '', active: true };
@@ -62,6 +64,61 @@ function StatusBadge({ status }: { status: string }) {
   };
   const [bg, color] = map[status] || ['rgba(100,100,100,0.1)', 'var(--cream-muted)'];
   return <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: bg, color, border: `1px solid ${color}33`, padding: '3px 9px' }}>{status}</span>;
+}
+
+// ── CSV PARSING (simple, handles quoted fields with commas) ──
+function parseCSV(text: string): { headers: string[]; rows: Record<string, string>[] } {
+  const lines = text.replace(/\r\n/g, '\n').split('\n').filter(l => l.trim().length > 0);
+  if (lines.length === 0) return { headers: [], rows: [] };
+
+  function parseLine(line: string): string[] {
+    const out: string[] = [];
+    let cur = '';
+    let inQuotes = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (inQuotes) {
+        if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+        else if (ch === '"') { inQuotes = false; }
+        else { cur += ch; }
+      } else {
+        if (ch === '"') inQuotes = true;
+        else if (ch === ',') { out.push(cur); cur = ''; }
+        else cur += ch;
+      }
+    }
+    out.push(cur);
+    return out;
+  }
+
+  const headers = parseLine(lines[0]).map(h => h.trim());
+  const rows = lines.slice(1).map(line => {
+    const vals = parseLine(line);
+    const row: Record<string, string> = {};
+    headers.forEach((h, i) => { row[h] = (vals[i] ?? '').trim(); });
+    return row;
+  });
+  return { headers, rows };
+}
+
+const CSV_TEMPLATE_HEADERS = [
+  'slug', 'name', 'tagline', 'description', 'price_gbp', 'sale_price_gbp',
+  'status', 'product_type', 'category_label', 'category_slug',
+  'seo_title', 'seo_description', 'file_url', 'drive_folder_url', 'image_url', 'features',
+];
+
+function downloadCSVTemplate() {
+  const example = [
+    'budget-compass', 'Budget Compass', 'AuDHD budgeting, finally simple', 'Internal description here', '57', '',
+    'draft', 'app', 'AuDHD & Neurodivergent', 'audhd', '', '', '', 'https://drive.google.com/drive/folders/...', '', 'Safe to spend dashboard|Debt tracker|Multiple paydays',
+  ];
+  const csv = CSV_TEMPLATE_HEADERS.join(',') + '\n' + example.map(v => `"${v.replace(/"/g, '""')}"`).join(',');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'kiteestudio-products-template.csv';
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function Modal({ title, onClose, children, wide }: { title: string; onClose: () => void; children: ReactNode; wide?: boolean }) {
@@ -105,6 +162,16 @@ export default function AdminPage() {
   const [newCode, setNewCode] = useState({ ...EMPTY_CODE });
   const [savingCode, setSavingCode] = useState(false);
   const [shareModal, setShareModal] = useState<Product | null>(null);
+  const [listingModal, setListingModal] = useState<Product | null>(null);
+  const [listingMarkdown, setListingMarkdown] = useState('');
+  const [listingGenerating, setListingGenerating] = useState(false);
+  const [listingError, setListingError] = useState('');
+  const [bulkModal, setBulkModal] = useState(false);
+  const [bulkCsvText, setBulkCsvText] = useState('');
+  const [bulkPreview, setBulkPreview] = useState<Record<string, string>[]>([]);
+  const [bulkParseError, setBulkParseError] = useState('');
+  const [bulkSubmitting, setBulkSubmitting] = useState(false);
+  const [bulkResults, setBulkResults] = useState<{ summary: BulkSummary; results: BulkResult[] } | null>(null);
 
   // Order filters
   const [orderSearch, setOrderSearch] = useState('');
@@ -201,6 +268,92 @@ export default function AdminPage() {
     const data = await res.json();
     if (data.error) { showToast(data.error, 'error'); return; }
     showToast('Product deleted'); setDeleteConfirm(null); loadProducts();
+  }
+
+  function handleBulkFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = String(reader.result || '');
+      setBulkCsvText(text);
+      parseBulkPreview(text);
+    };
+    reader.readAsText(file);
+  }
+
+  function parseBulkPreview(text: string) {
+    setBulkResults(null);
+    if (!text.trim()) { setBulkPreview([]); setBulkParseError(''); return; }
+    try {
+      const { headers, rows } = parseCSV(text);
+      if (!headers.includes('slug') || !headers.includes('name')) {
+        setBulkParseError('CSV must include at minimum "slug" and "name" columns.');
+        setBulkPreview([]);
+        return;
+      }
+      if (rows.length === 0) {
+        setBulkParseError('No data rows found below the header.');
+        setBulkPreview([]);
+        return;
+      }
+      setBulkParseError('');
+      setBulkPreview(rows);
+    } catch (err: any) {
+      setBulkParseError(`Could not parse CSV: ${err.message}`);
+      setBulkPreview([]);
+    }
+  }
+
+  async function submitBulkImport() {
+    if (bulkPreview.length === 0) return;
+    setBulkSubmitting(true);
+    setBulkResults(null);
+    try {
+      const res = await fetch('/api/admin/products/bulk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rows: bulkPreview }),
+      });
+      const data = await res.json();
+      if (data.error) { showToast(data.error, 'error'); setBulkSubmitting(false); return; }
+      setBulkResults(data);
+      showToast(`Batch import done: ${data.summary.created} created, ${data.summary.skipped} skipped, ${data.summary.errors} errors`, data.summary.errors > 0 ? 'error' : 'success');
+      loadProducts();
+    } catch (err: any) {
+      showToast(err.message, 'error');
+    }
+    setBulkSubmitting(false);
+  }
+
+  function closeBulkModal() {
+    setBulkModal(false);
+    setBulkCsvText('');
+    setBulkPreview([]);
+    setBulkParseError('');
+    setBulkResults(null);
+  }
+
+  async function generateListing(p: Product) {
+    setListingModal(p);
+    setListingMarkdown('');
+    setListingError('');
+    setListingGenerating(true);
+    try {
+      const res = await fetch('/api/admin/listings/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: p.name, tagline: p.tagline, description: p.description,
+          price_gbp: p.price_gbp, product_type: p.product_type,
+          category_label: p.category_label, features: p.features,
+        }),
+      });
+      const data = await res.json();
+      if (data.error) { setListingError(data.error); }
+      else { setListingMarkdown(data.markdown); }
+    } catch (err: any) {
+      setListingError(err.message);
+    }
+    setListingGenerating(false);
   }
 
   async function updateOrderStatus(orderId: string, status: string) {
@@ -345,7 +498,10 @@ export default function AdminPage() {
                     <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '28px', fontWeight: 300, color: 'var(--cream)', marginBottom: '4px' }}>Products</h2>
                     <p style={{ fontSize: '13px', color: 'var(--cream-muted)' }}>{products.length} product{products.length !== 1 ? 's' : ''}</p>
                   </div>
-                  <button style={S.btnGold} onClick={() => { setEditProduct({ ...EMPTY_PRODUCT }); setIsNewProduct(true); setProductModal(true); }}>+ Add Product</button>
+                  <div style={{ display: 'flex', gap: '10px' }}>
+                    <button style={S.btnOutline} onClick={() => setBulkModal(true)}>⇪ Batch Import</button>
+                    <button style={S.btnGold} onClick={() => { setEditProduct({ ...EMPTY_PRODUCT }); setIsNewProduct(true); setProductModal(true); }}>+ Add Product</button>
+                  </div>
                 </div>
                 <table style={S.table}>
                   <thead><tr>{['Product', 'Type', 'Price', 'Sale', 'File', 'Status', 'Actions'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr></thead>
@@ -369,6 +525,7 @@ export default function AdminPage() {
                           <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                             <button style={S.btnOutline} onClick={() => { setEditProduct({ ...p }); setIsNewProduct(false); setProductModal(true); }}>Edit</button>
                             <button style={S.btnOutline} onClick={() => setShareModal(p)}>Share</button>
+                            <button style={S.btnOutline} onClick={() => generateListing(p)}>Listing</button>
                             <button style={S.btnRed} onClick={() => setDeleteConfirm({ id: p.id, name: p.name })}>Delete</button>
                           </div>
                         </td>
@@ -563,6 +720,10 @@ export default function AdminPage() {
                 Upload your ZIP to <a href="https://drive.google.com/drive/folders/1jxxnuHgl8wcru_EHgmG_RvZ7duJ7bzGe" target="_blank" rel="noreferrer" style={{ color: 'var(--gold)' }}>KiTee Studio — Product Downloads ↗</a>, right-click → Share → Anyone with link → Copy link, paste here.
               </div>
             </div>
+            <div style={S.field}>
+              <label style={S.label}>Drive Folder URL (for this product's subfolder — listings, images, source files)</label>
+              <input style={S.input} value={editProduct.drive_folder_url || ''} onChange={e => setEditProduct(p => ({ ...p, drive_folder_url: e.target.value }))} placeholder="https://drive.google.com/drive/folders/..." />
+            </div>
             <div style={S.field}><label style={S.label}>Product Image URL</label><input style={S.input} value={editProduct.image_url || ''} onChange={e => setEditProduct(p => ({ ...p, image_url: e.target.value }))} placeholder="https://..." /></div>
           </div>
 
@@ -613,6 +774,134 @@ export default function AdminPage() {
         </Modal>
       )}
 
+      {/* ── BATCH IMPORT MODAL ── */}
+      {bulkModal && (
+        <Modal title="Batch Import Products" onClose={closeBulkModal} wide>
+          {!bulkResults ? (
+            <>
+              <p style={{ fontSize: '13px', color: 'var(--cream-muted)', marginBottom: '20px', lineHeight: 1.6 }}>
+                Paste a CSV below, or upload a file. Required columns: <strong style={{ color: 'var(--cream)' }}>slug, name, price_gbp</strong>. Optional: tagline, description, sale_price_gbp, status, product_type, category_label, category_slug, seo_title, seo_description, file_url, drive_folder_url, image_url, features (pipe-separated, e.g. <code>Feature one|Feature two</code>).
+              </p>
+              <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+                <button style={S.btnOutline} onClick={downloadCSVTemplate}>⇩ Download CSV Template</button>
+                <label style={{ ...S.btnOutline, display: 'inline-block' }}>
+                  ⇪ Upload CSV File
+                  <input type="file" accept=".csv,text/csv" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) handleBulkFile(f); }} />
+                </label>
+              </div>
+              <div style={S.field}>
+                <label style={S.label}>Or paste CSV directly</label>
+                <textarea
+                  style={{ ...S.textarea, minHeight: '160px', fontFamily: 'var(--font-mono)', fontSize: '11px' }}
+                  value={bulkCsvText}
+                  onChange={e => { setBulkCsvText(e.target.value); parseBulkPreview(e.target.value); }}
+                  placeholder="slug,name,tagline,description,price_gbp,..."
+                />
+              </div>
+              {bulkParseError && <p style={{ fontSize: '12px', color: '#e57373', marginBottom: '16px' }}>{bulkParseError}</p>}
+              {bulkPreview.length > 0 && !bulkParseError && (
+                <div style={{ marginBottom: '24px' }}>
+                  <div style={S.sectionLabel}>Preview — {bulkPreview.length} row{bulkPreview.length !== 1 ? 's' : ''} detected</div>
+                  <div style={{ overflowX: 'auto', maxHeight: '260px', overflowY: 'auto', border: '1px solid var(--border)' }}>
+                    <table style={S.table}>
+                      <thead><tr>{['slug', 'name', 'price_gbp', 'status', 'product_type'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr></thead>
+                      <tbody>
+                        {bulkPreview.map((row, i) => (
+                          <tr key={i}>
+                            <td style={S.td}>{row.slug || <span style={{ color: '#e57373' }}>missing</span>}</td>
+                            <td style={S.td}>{row.name || <span style={{ color: '#e57373' }}>missing</span>}</td>
+                            <td style={S.td}>{row.price_gbp || <span style={{ color: '#e57373' }}>missing</span>}</td>
+                            <td style={S.td}>{row.status || 'draft'}</td>
+                            <td style={S.td}>{row.product_type || 'app'}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                <button style={S.btnOutline} onClick={closeBulkModal}>Cancel</button>
+                <button
+                  style={{ ...S.btnGold, opacity: (bulkSubmitting || bulkPreview.length === 0 || !!bulkParseError) ? 0.5 : 1 }}
+                  onClick={submitBulkImport}
+                  disabled={bulkSubmitting || bulkPreview.length === 0 || !!bulkParseError}
+                >
+                  {bulkSubmitting ? 'Importing…' : `Import ${bulkPreview.length || ''} Product${bulkPreview.length !== 1 ? 's' : ''}`}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px', marginBottom: '24px' }}>
+                {[
+                  { label: 'Total Rows', value: bulkResults.summary.total },
+                  { label: 'Created', value: bulkResults.summary.created, color: '#7FB083' },
+                  { label: 'Skipped', value: bulkResults.summary.skipped, color: 'var(--gold)' },
+                  { label: 'Errors', value: bulkResults.summary.errors, color: '#e57373' },
+                ].map(s => (
+                  <div key={s.label} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', padding: '16px' }}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--cream-muted)', marginBottom: '6px' }}>{s.label}</div>
+                    <div style={{ fontFamily: 'var(--font-display)', fontSize: '24px', fontWeight: 600, color: s.color || 'var(--cream)' }}>{s.value}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ overflowX: 'auto', maxHeight: '320px', overflowY: 'auto', border: '1px solid var(--border)', marginBottom: '24px' }}>
+                <table style={S.table}>
+                  <thead><tr>{['Row', 'Slug', 'Result', 'Message'].map(h => <th key={h} style={S.th}>{h}</th>)}</tr></thead>
+                  <tbody>
+                    {bulkResults.results.map(r => (
+                      <tr key={r.row}>
+                        <td style={S.td}>{r.row}</td>
+                        <td style={S.td}><span style={{ fontFamily: 'var(--font-mono)', fontSize: '11px' }}>{r.slug}</span></td>
+                        <td style={S.td}><StatusBadge status={r.status === 'created' ? 'live' : r.status === 'skipped' ? 'pending' : 'failed'} /></td>
+                        <td style={S.td}>{r.message}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                <button style={S.btnOutline} onClick={closeBulkModal}>Close</button>
+              </div>
+            </>
+          )}
+        </Modal>
+      )}
+
+      {/* ── LISTING GENERATOR MODAL ── */}
+      {listingModal && (
+        <Modal title="Generate Listing Copy" onClose={() => setListingModal(null)} wide>
+          <p style={{ fontSize: '13px', color: 'var(--cream-muted)', marginBottom: '20px' }}>
+            Etsy + Gumroad listing copy for <strong style={{ color: 'var(--cream)' }}>{listingModal.name}</strong>, drafted from the KiTee Studio listing standard. This is copy-paste ready — there's no Etsy or Gumroad API to publish automatically, so review it here and paste it in when you list.
+          </p>
+          {listingGenerating ? (
+            <p style={{ fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--cream-muted)', padding: '24px 0' }}>Generating…</p>
+          ) : listingError ? (
+            <>
+              <p style={{ fontSize: '13px', color: '#e57373', marginBottom: '20px' }}>{listingError}</p>
+              <button style={S.btnOutline} onClick={() => generateListing(listingModal)}>Retry</button>
+            </>
+          ) : (
+            <>
+              <div style={{ background: 'var(--black-3)', border: '1px solid var(--border)', padding: '20px', fontFamily: 'var(--font-mono)', fontSize: '12px', color: 'var(--cream-dim)', lineHeight: 1.7, whiteSpace: 'pre-wrap', maxHeight: '420px', overflowY: 'auto', marginBottom: '16px' }}>
+                {listingMarkdown}
+              </div>
+              <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+                <button style={S.btnOutline} onClick={() => setListingModal(null)}>Close</button>
+                <button style={S.btnOutline} onClick={() => generateListing(listingModal)}>Regenerate</button>
+                <button style={S.btnGold} onClick={() => { navigator.clipboard.writeText(listingMarkdown); showToast('Listing copy copied ✓'); }}>Copy Markdown</button>
+              </div>
+              {listingModal.drive_folder_url && (
+                <p style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--cream-muted)', marginTop: '14px' }}>
+                  Save this into <a href={listingModal.drive_folder_url} target="_blank" rel="noreferrer" style={{ color: 'var(--gold)' }}>this product's Drive folder ↗</a> as listing-etsy-gumroad.md so it's there next to the files.
+                </p>
+              )}
+            </>
+          )}
+        </Modal>
+      )}
+
       {/* ── SOCIAL SHARE MODAL ── */}
       {shareModal && (
         <Modal title="Share Product" onClose={() => setShareModal(null)}>
@@ -638,3 +927,4 @@ export default function AdminPage() {
     </div>
   );
 }
+

@@ -65,6 +65,7 @@ function validateRow(row: BulkRow, index: number): { ok: boolean; error?: string
     product_type,
     category_label: row.category_label ? String(row.category_label).trim() : '',
     category_slug: row.category_slug ? String(row.category_slug).trim() : '',
+    category: row.category_slug ? String(row.category_slug).trim() : '',
     stripe_price_id: row.stripe_price_id ? String(row.stripe_price_id).trim() : '',
     seo_title: row.seo_title ? String(row.seo_title).trim() : '',
     seo_description: row.seo_description ? String(row.seo_description).trim() : '',

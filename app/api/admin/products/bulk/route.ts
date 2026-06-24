@@ -58,6 +58,7 @@ function validateRow(row: BulkRow, index: number): { ok: boolean; error?: string
     name: String(row.name).trim(),
     tagline: row.tagline ? String(row.tagline).trim() : '',
     description: row.description ? String(row.description).trim() : '',
+    price: price_gbp,
     price_gbp,
     sale_price_gbp,
     status,

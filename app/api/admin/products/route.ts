@@ -18,6 +18,12 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
+  // "niche" is a required (NOT NULL) DB column not yet exposed in the admin form.
+  // Default it from product_type so manual Add Product doesn't hit the same
+  // not-null violation the bulk importer was hitting.
+  if (!body.niche) {
+    body.niche = body.product_type === 'template' ? 'sitefill' : 'audhd';
+  }
   const { data, error } = await supabase.from('products').insert(body).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ product: data });
@@ -45,3 +51,4 @@ export async function DELETE(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }
+

@@ -53,8 +53,16 @@ function validateRow(row: BulkRow, index: number): { ok: boolean; error?: string
     ? row.features.split('|').map((f: string) => f.trim()).filter(Boolean)
     : Array.isArray(row.features) ? row.features : [];
 
+  // "niche" is a required (NOT NULL) DB column not currently exposed in the CSV template.
+  // Default it from product_type — the catalogue splits into exactly two lines —
+  // but let an explicit "niche" CSV column override it if provided.
+  const niche = row.niche
+    ? String(row.niche).trim().toLowerCase()
+    : (product_type === 'template' ? 'sitefill' : 'audhd');
+
   const cleaned: BulkRow = {
     slug,
+    niche,
     name: String(row.name).trim(),
     tagline: row.tagline ? String(row.tagline).trim() : '',
     description: row.description ? String(row.description).trim() : '',
@@ -149,3 +157,4 @@ export async function POST(req: NextRequest) {
     results: allResults,
   });
 }
+

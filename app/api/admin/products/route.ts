@@ -19,10 +19,18 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   // "niche" is a required (NOT NULL) DB column not yet exposed in the admin form.
-  // Default it from product_type so manual Add Product doesn't hit the same
-  // not-null violation the bulk importer was hitting.
+  // Derive from existing fields rather than inventing a value, matching the bulk
+  // importer's logic. Real catalogue niches: website-templates, audhd-mini-apps,
+  // business-kits-accessories, fitness-wellness, general.
   if (!body.niche) {
-    body.niche = body.product_type === 'template' ? 'sitefill' : 'audhd';
+    const pt = (body.product_type || '').toLowerCase();
+    const catSignal = `${body.category_slug || ''} ${body.category_label || ''}`.toLowerCase();
+    if (pt === 'website') body.niche = 'website-templates';
+    else if (pt === 'document') body.niche = 'business-kits-accessories';
+    else if (pt === 'bundle') body.niche = 'general';
+    else if (/audhd|adhd|neurodivergent/.test(catSignal)) body.niche = 'audhd-mini-apps';
+    else if (/fitness|wellness/.test(catSignal)) body.niche = 'fitness-wellness';
+    else body.niche = 'general';
   }
   const { data, error } = await supabase.from('products').insert(body).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

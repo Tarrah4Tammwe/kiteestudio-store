@@ -144,17 +144,12 @@ export async function POST(req: NextRequest) {
     .map(v => ({ row: v.index + 1, slug: v.cleaned.slug, status: 'skipped', message: `Slug "${v.cleaned.slug}" already exists — skipped. Use the Edit modal to update existing products.` }));
 
   let insertResults: RowResult[] = [];
-  if (toInsert.length > 0) {
-    const { data, error } = await supabase
-      .from('products')
-      .insert(toInsert.map(v => v.cleaned))
-      .select('slug');
-
+  for (const v of toInsert) {
+    const { error } = await supabase.from('products').insert(v.cleaned).select('slug').single();
     if (error) {
-      // Whole insert failed — report it against every row that was meant to go in
-      insertResults = toInsert.map(v => ({ row: v.index + 1, slug: v.cleaned.slug, status: 'error', message: `Insert failed: ${error.message}` }));
+      insertResults.push({ row: v.index + 1, slug: v.cleaned.slug, status: 'error', message: `Insert failed: ${error.message}` });
     } else {
-      insertResults = toInsert.map(v => ({ row: v.index + 1, slug: v.cleaned.slug, status: 'created', message: 'Created' }));
+      insertResults.push({ row: v.index + 1, slug: v.cleaned.slug, status: 'created', message: 'Created' });
     }
   }
 
@@ -168,4 +163,5 @@ export async function POST(req: NextRequest) {
     results: allResults,
   });
 }
+
 

@@ -54,11 +54,22 @@ function validateRow(row: BulkRow, index: number): { ok: boolean; error?: string
     : Array.isArray(row.features) ? row.features : [];
 
   // "niche" is a required (NOT NULL) DB column not currently exposed in the CSV template.
-  // Default it from product_type — the catalogue splits into exactly two lines —
-  // but let an explicit "niche" CSV column override it if provided.
-  const niche = row.niche
-    ? String(row.niche).trim().toLowerCase()
-    : (product_type === 'template' ? 'sitefill' : 'audhd');
+  // Derive it from fields already on the row — never invent a scheme — and let an
+  // explicit "niche" CSV column override it if the person sets one.
+  // Real catalogue niches: website-templates, audhd-mini-apps,
+  // business-kits-accessories, fitness-wellness, general.
+  function deriveNiche(): string {
+    if (row.niche) return String(row.niche).trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    if (product_type === 'website') return 'website-templates';
+    if (product_type === 'document') return 'business-kits-accessories';
+    if (product_type === 'bundle') return 'general';
+    // product_type === 'app' — disambiguate via category_slug/category_label
+    const catSignal = `${row.category_slug || ''} ${row.category_label || ''}`.toLowerCase();
+    if (/audhd|adhd|neurodivergent/.test(catSignal)) return 'audhd-mini-apps';
+    if (/fitness|wellness/.test(catSignal)) return 'fitness-wellness';
+    return 'general';
+  }
+  const niche = deriveNiche();
 
   const cleaned: BulkRow = {
     slug,

@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import crypto from 'crypto';
+import { getAdSettings } from '@/lib/adSettings';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' });
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
@@ -14,8 +15,8 @@ function hashForMeta(value?: string | null) {
 }
 
 // Server-side Purchase event for Meta's Conversions API.
-// Skips silently if META_PIXEL_ID / META_CONVERSION_API_TOKEN aren't set —
-// this is optional and only activates once those env vars are added.
+// Pixel ID / token come from Admin → Settings → Ads & Tracking (falls back
+// to env vars). Skips silently if neither is configured anywhere.
 // event_id matches the client-side dataLayer event on the success page so
 // Meta de-duplicates the two signals into a single conversion.
 async function sendMetaPurchaseEvent(opts: {
@@ -24,9 +25,8 @@ async function sendMetaPurchaseEvent(opts: {
   value: number;
   currency: string;
 }) {
-  const pixelId = process.env.META_PIXEL_ID;
-  const accessToken = process.env.META_CONVERSION_API_TOKEN;
-  if (!pixelId || !accessToken) return;
+  const { metaPixelId, metaCapiToken } = await getAdSettings();
+  if (!metaPixelId || !metaCapiToken) return;
 
   const payload = {
     data: [
@@ -48,7 +48,7 @@ async function sendMetaPurchaseEvent(opts: {
   };
 
   try {
-    await fetch(`https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${accessToken}`, {
+    await fetch(`https://graph.facebook.com/v19.0/${metaPixelId}/events?access_token=${metaCapiToken}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),

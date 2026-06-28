@@ -675,6 +675,39 @@ export default function AdminPage() {
                     Current folder: <a href={`https://drive.google.com/drive/folders/${localSettings['gdrive_folder_id']}`} target="_blank" rel="noreferrer" style={{ color: 'var(--gold)' }}>KiTee Studio — Product Downloads ↗</a>
                   </div>
                 </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '32px' }}>
+                  <div style={S.sectionLabel}>Ads & Tracking</div>
+                  <span style={{
+                    fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.1em', textTransform: 'uppercase',
+                    padding: '3px 8px', borderRadius: '3px',
+                    color: localSettings['gtm_id'] ? '#6FBF73' : 'var(--cream-muted)',
+                    background: localSettings['gtm_id'] ? 'rgba(111,191,115,0.12)' : 'rgba(255,255,255,0.05)',
+                  }}>
+                    {localSettings['gtm_id'] ? '● Live' : '○ Not configured'}
+                  </span>
+                </div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--cream-muted)', marginBottom: '16px', lineHeight: 1.6 }}>
+                  Controls ad pixel tracking storewide (Meta, Google Ads, Pinterest, TikTok). Changes here go live within a minute — no redeploy needed.
+                </div>
+                <div style={S.field}>
+                  <label style={S.label}>Google Tag Manager Container ID</label>
+                  <input style={S.input} value={localSettings['gtm_id'] || ''} onChange={e => setLocalSettings(s => ({ ...s, gtm_id: e.target.value }))} placeholder="GTM-XXXXXXX" />
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--cream-muted)', marginTop: '6px' }}>
+                    Get this from <a href="https://tagmanager.google.com" target="_blank" rel="noreferrer" style={{ color: 'var(--gold)' }}>tagmanager.google.com ↗</a>. Once set, add and manage individual ad pixels (Meta, Google Ads, Pinterest, TikTok) entirely inside the GTM dashboard — no code changes needed.
+                  </div>
+                </div>
+                <div style={S.field}>
+                  <label style={S.label}>Meta Pixel ID</label>
+                  <input style={S.input} value={localSettings['meta_pixel_id'] || ''} onChange={e => setLocalSettings(s => ({ ...s, meta_pixel_id: e.target.value }))} placeholder="e.g. 123456789012345" />
+                </div>
+                <div style={S.field}>
+                  <label style={S.label}>Meta Conversions API Access Token</label>
+                  <input type="password" style={S.input} value={localSettings['meta_capi_token'] || ''} onChange={e => setLocalSettings(s => ({ ...s, meta_capi_token: e.target.value }))} placeholder="EAAG..." />
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--cream-muted)', marginTop: '6px' }}>
+                    Optional but recommended — from Meta Events Manager → Settings → Conversions API. Sends a backup server-side Purchase event on every order so tracking survives ad blockers and iOS privacy restrictions.
+                  </div>
+                </div>
               </div>
             )}
           </>

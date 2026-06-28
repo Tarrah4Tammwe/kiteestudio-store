@@ -1,17 +1,19 @@
 import Script from 'next/script';
+import { getAdSettings } from '@/lib/adSettings';
 
 /**
  * Google Tag Manager loader.
  *
- * Add NEXT_PUBLIC_GTM_ID to your environment (e.g. GTM-XXXXXXX) and this
- * renders automatically — no further code changes needed. Once it's live,
- * add/manage individual ad pixels (Meta, Google Ads, Pinterest, TikTok)
- * entirely inside the GTM dashboard at tagmanager.google.com.
+ * The GTM Container ID is managed from Admin → Settings → Ads & Tracking
+ * (falls back to NEXT_PUBLIC_GTM_ID if nothing is set there). Once a GTM
+ * container ID is in place, add/manage individual ad pixels (Meta, Google
+ * Ads, Pinterest, TikTok) entirely inside the GTM dashboard at
+ * tagmanager.google.com — no further code changes needed.
  *
- * If NEXT_PUBLIC_GTM_ID is not set, this renders nothing.
+ * Renders nothing if no GTM ID is configured anywhere.
  */
-export default function GoogleTagManager() {
-  const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+export default async function GoogleTagManager() {
+  const { gtmId } = await getAdSettings();
   if (!gtmId) return null;
 
   return (

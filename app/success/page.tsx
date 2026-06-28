@@ -1,11 +1,40 @@
 'use client';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useCart } from '@/lib/cartContext';
+import { trackPurchase } from '@/lib/analytics';
 
-export default function SuccessPage() {
+function SuccessContent() {
   const { clearCart } = useCart();
-  useEffect(() => { clearCart(); }, []);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    clearCart();
+
+    const sessionId = searchParams.get('session_id');
+    if (!sessionId) return;
+
+    // Guard against double-firing the conversion if the page is refreshed.
+    const firedKey = `kt_purchase_fired_${sessionId}`;
+    if (sessionStorage.getItem(firedKey)) return;
+
+    fetch(`/api/checkout/session?session_id=${sessionId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) return;
+        trackPurchase({
+          event_id: data.session_id,
+          value: data.value,
+          currency: data.currency,
+          items: data.items,
+          email: data.email,
+        });
+        sessionStorage.setItem(firedKey, '1');
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--plum)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px 20px', position: 'relative', overflow: 'hidden' }}>
@@ -54,5 +83,13 @@ export default function SuccessPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={null}>
+      <SuccessContent />
+    </Suspense>
   );
 }

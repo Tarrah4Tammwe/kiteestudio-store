@@ -2,10 +2,61 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import crypto from 'crypto';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2024-06-20' });
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
+
+function hashForMeta(value?: string | null) {
+  if (!value) return undefined;
+  return crypto.createHash('sha256').update(value.trim().toLowerCase()).digest('hex');
+}
+
+// Server-side Purchase event for Meta's Conversions API.
+// Skips silently if META_PIXEL_ID / META_CONVERSION_API_TOKEN aren't set —
+// this is optional and only activates once those env vars are added.
+// event_id matches the client-side dataLayer event on the success page so
+// Meta de-duplicates the two signals into a single conversion.
+async function sendMetaPurchaseEvent(opts: {
+  eventId: string;
+  email?: string | null;
+  value: number;
+  currency: string;
+}) {
+  const pixelId = process.env.META_PIXEL_ID;
+  const accessToken = process.env.META_CONVERSION_API_TOKEN;
+  if (!pixelId || !accessToken) return;
+
+  const payload = {
+    data: [
+      {
+        event_name: 'Purchase',
+        event_time: Math.floor(Date.now() / 1000),
+        event_id: opts.eventId,
+        action_source: 'website',
+        event_source_url: process.env.NEXT_PUBLIC_URL,
+        user_data: {
+          em: opts.email ? [hashForMeta(opts.email)] : undefined,
+        },
+        custom_data: {
+          currency: opts.currency,
+          value: opts.value,
+        },
+      },
+    ],
+  };
+
+  try {
+    await fetch(`https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${accessToken}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch (err) {
+    console.error('Meta Conversions API error:', err);
+  }
+}
 
 export async function POST(req: NextRequest) {
   const body = await req.text();
@@ -79,6 +130,16 @@ export async function POST(req: NextRequest) {
         });
       }
     }
+
+    // Server-side Purchase conversion (Meta CAPI) — fires once per session
+    // using the same event_id as the client-side dataLayer push on the
+    // success page, so the two signals de-duplicate into one conversion.
+    await sendMetaPurchaseEvent({
+      eventId: expanded.id,
+      email: expanded.customer_details?.email,
+      value: (expanded.amount_total || 0) / 100,
+      currency: expanded.currency || 'gbp',
+    });
   }
 
   return NextResponse.json({ received: true });

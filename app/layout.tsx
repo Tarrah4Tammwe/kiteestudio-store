@@ -3,6 +3,7 @@ import './globals.css';
 import { CartProvider } from '@/lib/cartContext';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
+import GoogleTagManager from '@/components/GoogleTagManager';
 
 export const metadata: Metadata = {
   title: { template: '%s — KiTee Studio', default: 'KiTee Studio — Premium Website Templates' },
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <GoogleTagManager />
         <CartProvider>
           <Nav />
           <main>{children}</main>

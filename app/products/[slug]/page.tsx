@@ -1,18 +1,11 @@
-'use client';
-import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getProductBySlug, PRODUCTS } from '@/lib/products';
+import { getLiveProductBySlug, getLiveProducts } from '@/lib/db';
 import ProductCard from '@/components/ProductCard';
-import { useCart } from '@/lib/cartContext';
-import { useState } from 'react';
+import AddToCartSection from '@/components/AddToCartSection';
 
-export default function ProductPage() {
-  const { slug } = useParams() as { slug: string };
-  const p = getProductBySlug(slug);
-  const { addItem, hasItem } = useCart();
-  const [adding, setAdding] = useState(false);
-  const [toast, setToast] = useState(false);
+export default async function ProductPage({ params }: { params: { slug: string } }) {
+  const p = await getLiveProductBySlug(params.slug);
 
   if (!p) return (
     <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
@@ -21,15 +14,8 @@ export default function ProductPage() {
     </div>
   );
 
-  const inCart = hasItem(p.slug);
-  const related = PRODUCTS.filter(r => r.category === p.category && r.slug !== p.slug).slice(0, 3);
-
-  function handleAdd() {
-    if (!p || inCart) return;
-    setAdding(true);
-    addItem(p);
-    setTimeout(() => { setAdding(false); setToast(true); setTimeout(() => setToast(false), 3000); }, 400);
-  }
+  const allProducts = await getLiveProducts();
+  const related = allProducts.filter(r => r.category === p.category && r.slug !== p.slug).slice(0, 3);
 
   return (
     <>
@@ -93,12 +79,7 @@ export default function ProductPage() {
                 </span>
               </div>
 
-              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <button onClick={handleAdd} disabled={inCart || adding} className="btn-gold">
-                  {adding ? 'Adding...' : inCart ? '✓ In Cart' : 'Add to Cart'}
-                </button>
-                {inCart && <Link href="/cart" className="btn-outline">View Cart →</Link>}
-              </div>
+              <AddToCartSection product={p} />
 
               <p style={{ marginTop: '14px', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.08em', color: 'var(--cream-muted)' }}>
                 Digital product — instant download after purchase. All sales final.
@@ -122,8 +103,6 @@ export default function ProductPage() {
           </div>
         </section>
       )}
-
-      <div className={`toast${toast ? ' show' : ''}`}>{p.name} added to cart</div>
 
       <style>{`
         @media (max-width: 900px) {

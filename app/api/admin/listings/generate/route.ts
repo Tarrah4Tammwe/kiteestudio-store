@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/adminAuth';
 
 // This route generates Etsy + Gumroad listing copy for a product using the
 // Anthropic API, following the KiTee Studio listing standard. It returns
@@ -50,6 +51,9 @@ Output ONLY valid markdown with these exact sections, nothing before or after:
 One line confirming product name and price for the person doing the upload.`;
 
 export async function POST(req: NextRequest) {
+  const unauthorized = requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   const body = await req.json();
   const { name, tagline, description, price_gbp, product_type, category_label, features } = body;
 

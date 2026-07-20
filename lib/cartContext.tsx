@@ -18,17 +18,23 @@ const Ctx = createContext<CartCtx | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
     try {
       const s = localStorage.getItem('ks_cart');
       if (s) setItems(JSON.parse(s));
     } catch {}
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
+    // Skip the write on the initial mount — items is still the [] default
+    // at that point, and writing it would overwrite the real cart before
+    // the read effect above has had a chance to restore it.
+    if (!hydrated) return;
     localStorage.setItem('ks_cart', JSON.stringify(items));
-  }, [items]);
+  }, [items, hydrated]);
 
   const count = items.reduce((s, i) => s + i.quantity, 0);
   const total = items.reduce((s, i) => s + i.product.price * i.quantity, 0);

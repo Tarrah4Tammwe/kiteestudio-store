@@ -19,24 +19,29 @@ const liveTemplates = PRODUCTS.filter(p => p.productType === 'template' && p.sta
 
 const marqueeItems = ['AuDHD Tools', '✦', 'Gym Tracker', '✦', 'Website Templates', '✦', 'Offline Apps', '✦', 'No Subscriptions', '✦', 'Buy Once Own Forever', '✦', 'AuDHD Tools', '✦', 'Gym Tracker', '✦', 'Website Templates', '✦', 'Offline Apps', '✦', 'No Subscriptions', '✦', 'Buy Once Own Forever', '✦'];
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'KiTee Studio',
+  url: 'https://kiteestudio.com',
+  description: 'Downloadable utility apps and premium website templates. No subscriptions. Buy once, own forever.',
+  founder: { '@type': 'Person', name: 'Tarrah' },
+  sameAs: [
+    'https://www.linkedin.com/in/tarrah-nhari',
+    'https://kiteestudio.substack.com',
+  ],
+};
+
 export default function HomePage() {
   return (
     <>
       {/* ── JSON-LD structured data ── */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify({
-          '@context': 'https://schema.org',
-          '@type': 'Organization',
-          name: 'KiTee Studio',
-          url: 'https://kiteestudio.com',
-          description: 'Downloadable utility apps and premium website templates. No subscriptions. Buy once, own forever.',
-          founder: { '@type': 'Person', name: 'Tarrah' },
-          sameAs: [
-            'https://www.linkedin.com/in/tarrah-nhari',
-            'https://kiteestudio.substack.com',
-          ],
-        })}}
+        // Escaping "<" prevents the browser from parsing "</script>" or "<!--"
+        // sequences inside the JSON early, which desyncs SSR output from what
+        // React expects to hydrate and throws hydration errors (#418/#423/#425).
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
 
       {/* ── HERO — Studio landing ── */}

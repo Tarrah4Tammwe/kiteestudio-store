@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import { requireAdmin } from '@/lib/adminAuth';
 const sb = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(req: NextRequest) {
+  const unauthorized = requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   const { orderId } = await req.json();
   const { data: order, error } = await sb.from('orders').select('*').eq('id', orderId).single();
   if (error || !order) return NextResponse.json({ error: 'Order not found' }, { status: 404 });

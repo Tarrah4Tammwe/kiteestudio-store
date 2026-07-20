@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { requireAdmin } from '@/lib/adminAuth';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const unauthorized = requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   const { data, error } = await supabase
     .from('products')
     .select('*')
@@ -17,6 +21,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const unauthorized = requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   const body = await req.json();
   // "niche" is a required (NOT NULL) DB column not yet exposed in the admin form.
   // Derive from existing fields rather than inventing a value, matching the bulk
@@ -38,6 +45,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  const unauthorized = requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   const body = await req.json();
   const { productId, ...updates } = body;
   if (!productId) return NextResponse.json({ error: 'productId required' }, { status: 400 });
@@ -52,6 +62,9 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  const unauthorized = requireAdmin(req);
+  if (unauthorized) return unauthorized;
+
   const { searchParams } = new URL(req.url);
   const productId = searchParams.get('id');
   if (!productId) return NextResponse.json({ error: 'id required' }, { status: 400 });

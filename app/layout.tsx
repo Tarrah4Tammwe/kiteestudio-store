@@ -13,6 +13,9 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: { template: '%s — KiTee Studio', default: 'KiTee Studio — Premium Website Templates' },
   description: 'Premium one-page website templates for freelancers, coaches, authors, and creators. Download, customise, publish — no code needed.',
+  other: {
+    'p:domain_verify': 'aa93db1fd27e9dcb353c7a77ebcfb8c8',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -4,8 +4,9 @@ import { getLiveProductBySlug, getLiveProducts } from '@/lib/db';
 import ProductCard from '@/components/ProductCard';
 import AddToCartSection from '@/components/AddToCartSection';
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const p = await getLiveProductBySlug(params.slug);
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const p = await getLiveProductBySlug(slug);
 
   if (!p) return (
     <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>

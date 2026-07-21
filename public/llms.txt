@@ -1,0 +1,56 @@
+# KiTee Studio
+
+> KiTee Studio is a boutique digital products studio that builds downloadable
+> utility apps and premium one-page website templates. Every product is a
+> single self-contained file: buy once, download, and own it forever. No
+> subscriptions, no accounts, no hosting required. Built by a neurodivergent
+> founder, with tools designed specifically for AuDHD and neurodivergent
+> brains alongside general-purpose products for coaches, freelancers,
+> authors, podcasters, personal trainers, and makers.
+
+## About
+
+- Founder: Tarrah, an AuDHD founder and builder based in the UK.
+- Positioning: practical, no-fluff tools that solve one real problem well,
+  not bloated all-in-one platforms.
+- Every website template ships with SiteFill™, a built-in visual editor —
+  buyers fill in their own content directly in the browser and download a
+  finished, ready-to-publish HTML file. No code, no page builder account.
+- Every utility app is a single offline HTML file: open it in any browser,
+  on any device, and it works with no internet connection and no login.
+
+## Utility Apps
+
+- Burnout Recovery Blueprint (/products/burnout-recovery-blueprint) — track
+  energy, identify burnout stage, build a recovery plan. Built for AuDHD
+  and neurodivergent brains.
+- Post-Diagnosis Rebuild Kit (/products/post-diagnosis-rebuild-kit) — a
+  guided tool for processing a late AuDHD diagnosis and rebuilding identity.
+- Gym Tracker (/products/gym-tracker) — offline workout and personal-record
+  tracker, no subscription.
+
+## SiteFill™ Website Templates
+
+- Life Coach (/products/life-coach-website-template)
+- Freelancer (/products/freelancer-website-template)
+- Author (/products/author-website-template) and Author Premium
+  (/products/author-premium-template)
+- Podcast (/products/podcast-website-template)
+- Shop & Artisan (/products/shop-website-template)
+- Personal Trainer (/products/personal-trainer-website-template) and
+  Personal Trainer Premium (/products/personal-trainer-premium-template)
+
+## Key facts
+
+- All products are one-time purchases. No subscriptions, ever.
+- All prices are in GBP.
+- Digital delivery only — instant download after purchase, no physical
+  shipping.
+- Full, current catalogue with live pricing: https://kiteestudio.com/shop
+- Support / contact: via the site's contact channels linked in the footer
+  at https://kiteestudio.com
+
+## Full catalogue
+
+See https://kiteestudio.com/sitemap.xml for the complete, always-current
+list of live product pages.

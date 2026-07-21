@@ -1,8 +1,28 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import type { Metadata } from 'next';
 import { getLiveProductBySlug, getLiveProducts } from '@/lib/db';
 import ProductCard from '@/components/ProductCard';
 import AddToCartSection from '@/components/AddToCartSection';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const p = await getLiveProductBySlug(slug);
+  if (!p) return { title: 'Template not found' };
+
+  const title = p.seoTitle || `${p.name} — SiteFill™ by KiTee Studio`;
+  const description = p.seoDescription || p.tagline;
+  const url = `https://kiteestudio.com/products/${p.slug}`;
+  const image = `https://kiteestudio.com${p.image}`;
+
+  return {
+    title,
+    description,
+    alternates: { canonical: url },
+    openGraph: { title, description, url, images: [{ url: image, width: 900, height: 900, alt: p.name }], type: 'website' },
+    twitter: { card: 'summary_large_image', title, description, images: [image] },
+  };
+}
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -18,8 +38,33 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const allProducts = await getLiveProducts();
   const related = allProducts.filter(r => r.category === p.category && r.slug !== p.slug).slice(0, 3);
 
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: p.name,
+    description: p.seoDescription || p.description,
+    image: `https://kiteestudio.com${p.image}`,
+    brand: { '@type': 'Brand', name: 'KiTee Studio' },
+    offers: {
+      '@type': 'Offer',
+      url: `https://kiteestudio.com/products/${p.slug}`,
+      priceCurrency: 'GBP',
+      price: p.price,
+      availability: 'https://schema.org/InStock',
+    },
+  };
+
   return (
     <>
+      {/* JSON-LD structured data */}
+      <script
+        type="application/ld+json"
+        // Escaping "<" prevents the browser from parsing "</script>" or "<!--"
+        // sequences inside the JSON early, which desyncs SSR output from what
+        // React expects to hydrate.
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, '\\u003c') }}
+      />
+
       {/* Breadcrumb */}
       <div style={{ paddingTop: 'var(--nav-h)', background: 'var(--purple-deep)', borderBottom: '1px solid var(--border)' }}>
         <div className="container" style={{ padding: '14px 48px' }}>

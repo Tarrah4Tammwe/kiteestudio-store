@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ADMIN_COOKIE, SESSION_MAX_AGE, createSessionToken } from '@/lib/adminAuth';
+import { ADMIN_COOKIE, SESSION_MAX_AGE, createSessionToken, verifyAdminPassword } from '@/lib/adminAuth';
 
 // In-memory lockout: 5 attempts per IP per 15 minutes. This resets on a
 // cold start / redeploy so it isn't a substitute for a real distributed
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
   const { password } = await req.json();
 
-  if (password && password === process.env.ADMIN_PASSWORD) {
+  if (await verifyAdminPassword(password)) {
     attempts.delete(ip);
     const res = NextResponse.json({ ok: true });
     res.cookies.set(ADMIN_COOKIE, createSessionToken(), {

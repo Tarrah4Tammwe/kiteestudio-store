@@ -182,6 +182,12 @@ export default function AdminPage() {
   const [savingSettings, setSavingSettings] = useState(false);
   const [localSettings, setLocalSettings] = useState<Settings>({});
 
+  // Change password
+  const [currentPw, setCurrentPw] = useState('');
+  const [newPw, setNewPw] = useState('');
+  const [confirmPw, setConfirmPw] = useState('');
+  const [changingPw, setChangingPw] = useState(false);
+
   function showToast(msg: string, type: 'success' | 'error' = 'success') {
     setToast(msg); setToastType(type);
     setTimeout(() => setToast(''), 3500);
@@ -397,6 +403,20 @@ export default function AdminPage() {
     if (data.error) showToast(data.error, 'error');
     else { showToast('Settings saved ✓'); setSettings({ ...localSettings }); }
     setSavingSettings(false);
+  }
+
+  async function changePassword() {
+    if (!newPw || newPw.length < 8) { showToast('New password must be at least 8 characters', 'error'); return; }
+    if (newPw !== confirmPw) { showToast('New passwords don\'t match', 'error'); return; }
+    setChangingPw(true);
+    const res = await fetch('/api/admin/change-password', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: currentPw, newPassword: newPw }),
+    });
+    const data = await res.json();
+    if (data.error) showToast(data.error, 'error');
+    else { showToast('Password changed ✓'); setCurrentPw(''); setNewPw(''); setConfirmPw(''); }
+    setChangingPw(false);
   }
 
   function fmtMoney(pence: number) { return `£${((pence || 0) / 100).toFixed(2)}`; }
@@ -708,6 +728,26 @@ export default function AdminPage() {
                     Optional but recommended — from Meta Events Manager → Settings → Conversions API. Sends a backup server-side Purchase event on every order so tracking survives ad blockers and iOS privacy restrictions.
                   </div>
                 </div>
+
+                <div style={{ ...S.sectionLabel, marginTop: '32px' }}>Account Security</div>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', color: 'var(--cream-muted)', marginBottom: '16px', lineHeight: 1.6 }}>
+                  Set a day-to-day admin password here — takes effect immediately, no redeploy needed. Your original Vercel-set password keeps working too, as a permanent recovery key if you ever forget this one.
+                </div>
+                <div style={S.field}>
+                  <label style={S.label}>Current Password</label>
+                  <input type="password" style={S.input} value={currentPw} onChange={e => setCurrentPw(e.target.value)} autoComplete="current-password" />
+                </div>
+                <div style={S.field}>
+                  <label style={S.label}>New Password</label>
+                  <input type="password" style={S.input} value={newPw} onChange={e => setNewPw(e.target.value)} autoComplete="new-password" placeholder="At least 8 characters" />
+                </div>
+                <div style={S.field}>
+                  <label style={S.label}>Confirm New Password</label>
+                  <input type="password" style={S.input} value={confirmPw} onChange={e => setConfirmPw(e.target.value)} autoComplete="new-password" />
+                </div>
+                <button style={{ ...S.btnGold, opacity: changingPw ? 0.6 : 1 }} onClick={changePassword} disabled={changingPw}>
+                  {changingPw ? 'Changing…' : 'Change Password'}
+                </button>
               </div>
             )}
           </>

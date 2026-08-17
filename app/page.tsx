@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import type { Metadata } from 'next';
+import HoverMedia from '@/components/HoverMedia';
+import HeroShowcase from '@/components/HeroShowcase';
 import { PRODUCTS, APP_CATEGORIES, getAppsByCategory } from '@/lib/products';
 
 export const metadata: Metadata = {
@@ -94,16 +95,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Floating hero video — one real product, front and centre */}
-          <div className="hero-float" style={{ flex: '0 0 440px' }}>
-            <div className="hero-float-glow" />
-            <div className="hero-float-phone">
-              <div className="hero-float-notch" />
-              <video src="/videos/gym-tracker-loop.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Gym Tracker app in use" />
-            </div>
-            <div className="hero-float-tag">
-              <span className="dot" /> LIVE PRODUCT — GYM TRACKER
-            </div>
+          {/* Floating hero video — rotates through real products */}
+          <div style={{ flex: '0 0 440px' }}>
+            <HeroShowcase />
           </div>
         </div>
       </section>
@@ -260,7 +254,7 @@ export default function HomePage() {
                   {apps.slice(0, 3).map(p => (
                     <Link key={p.slug} href={`/products/${p.slug}`} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', transition: 'border-color 0.3s', textDecoration: 'none' }} className="app-card">
                       <div style={{ position: 'relative', aspectRatio: '1/1', width: '100%', overflow: 'hidden' }}>
-                        <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
+                        <HoverMedia image={p.image} video={p.video} alt={p.name} sizes="(max-width:768px) 100vw, 33vw" />
                       </div>
                       <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -306,7 +300,7 @@ export default function HomePage() {
               <Link key={p.slug} href={`/products/${p.slug}`} className="product-card">
                 <div className="product-card-img" style={{ aspectRatio: '4/3', position: 'relative' }}>
                   {p.badge && <span className="badge">{p.badge}</span>}
-                  <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 25vw" />
+                  <HoverMedia image={p.image} video={p.video} alt={p.name} sizes="(max-width:768px) 100vw, 25vw" />
                 </div>
                 <div className="product-card-body">
                   <div className="product-card-cat">{p.categoryLabel}</div>

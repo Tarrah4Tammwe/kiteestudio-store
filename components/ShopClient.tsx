@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { APP_CATEGORIES, TEMPLATE_CATEGORIES, type Product } from '@/lib/products';
+import HoverMedia from './HoverMedia';
 
 type Filter = 'all' | 'apps' | 'templates';
 
@@ -123,7 +123,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
                         p.status === 'live' ? (
                           <Link key={p.slug} href={`/products/${p.slug}`} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', transition: 'border-color 0.3s, transform 0.2s', textDecoration: 'none' }} className="app-card">
                             <div style={{ position: 'relative', aspectRatio: '1/1', width: '100%', overflow: 'hidden' }}>
-                              <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
+                              <HoverMedia image={p.image} video={p.video} alt={p.name} sizes="(max-width:768px) 100vw, 33vw" />
                             </div>
                             <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -141,7 +141,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
                         ) : (
                           <div key={p.slug} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', opacity: 0.55 }}>
                             <div style={{ position: 'relative', aspectRatio: '1/1', width: '100%', overflow: 'hidden' }}>
-                              <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
+                              <HoverMedia image={p.image} video={p.video} alt={p.name} sizes="(max-width:768px) 100vw, 33vw" />
                             </div>
                             <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -194,7 +194,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
                             {p.status !== 'live' && (
                               <span style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2, fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: 'rgba(60,10,40,0.7)', color: 'var(--cream-muted)', border: '1px solid var(--border)', padding: '3px 8px' }}>Coming soon</span>
                             )}
-                            <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
+                            <HoverMedia image={p.image} video={p.video} alt={p.name} sizes="(max-width:768px) 100vw, 33vw" />
                           </div>
                           <div className="product-card-body">
                             <div className="product-card-cat">{p.categoryLabel}</div>

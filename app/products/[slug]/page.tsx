@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import type { Metadata } from 'next';
 import { getLiveProductBySlug, getLiveProducts } from '@/lib/db';
 import ProductCard from '@/components/ProductCard';
+import ProductGallery from '@/components/ProductGallery';
 import AddToCartSection from '@/components/AddToCartSection';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -101,10 +101,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
             {/* Image */}
             <div style={{ position: 'sticky', top: 'calc(var(--nav-h) + 24px)' }}>
-              <div style={{ position: 'relative', aspectRatio: '1/1', background: 'var(--purple-deep)', border: '1px solid var(--border-mid)', overflow: 'hidden' }}>
-                <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} />
-                {p.badge && <span className="badge">{p.badge}</span>}
-              </div>
+              <ProductGallery product={p} />
             </div>
 
             {/* Details */}

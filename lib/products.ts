@@ -41,6 +41,8 @@ export type Product = {
   badge?: string;
   status: 'live' | 'coming-soon';
   image: string;
+  gallery?: string[];      // additional real screenshots — product page shows these alongside `image`
+  video?: string;          // muted looping demo clip — plays on hover on cards, autoplays on the product page
   mockupCount?: number;
   seoTitle?: string;
   seoDescription?: string;
@@ -196,6 +198,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'fitness-wellness',
     status: 'live',
     image: '/images/products/gym-01.jpg',
+    gallery: ['/images/products/gym-tracker-02.jpg', '/images/products/gym-tracker-03.jpg', '/images/products/gym-tracker-04.jpg'],
+    video: '/videos/gym-tracker-loop.mp4',
     features: [
       'Log sets, reps, and weights',
       'Workout history and progress tracking',
@@ -222,6 +226,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/the-executer-01.jpg',
+    gallery: ['/images/products/the-executer-03.jpg', '/images/products/the-executer-04.jpg'],
     features: [
       'Six stuck-state triage paths',
       'Guided breathing animation',
@@ -248,6 +253,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/heat-wave-survival-trilogy-01.jpg',
+    gallery: ['/images/products/heat-wave-survival-trilogy-02.jpg', '/images/products/heat-wave-survival-trilogy-03.jpg', '/images/products/heat-wave-survival-trilogy-04.jpg'],
+    video: '/videos/heat-wave-survival-trilogy-loop.mp4',
     features: [
       'Heat Fog Survival Kit — guided cooling break + fog check',
       'Heat Sleep Reset — wind-down routine + breathing pacer',
@@ -274,6 +281,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/author-launch-kit-01.jpg',
+    gallery: ['/images/products/author-launch-kit-03.jpg', '/images/products/author-launch-kit-04.jpg'],
     features: [
       'Book launch tracker with milestones',
       'Royalty & income tracker across platforms',
@@ -299,6 +307,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/cleaning-business-starter-kit-01.jpg',
+    gallery: ['/images/products/cleaning-business-starter-kit-02.jpg', '/images/products/cleaning-business-starter-kit-03.jpg', '/images/products/cleaning-business-starter-kit-04.jpg'],
+    video: '/videos/cleaning-business-starter-kit-loop.mp4',
     features: [
       'Job tracker and setup checklist',
       'Client list',
@@ -324,6 +334,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/home-maintenance-tracker-01.jpg',
+    gallery: ['/images/products/home-maintenance-tracker-02.jpg', '/images/products/home-maintenance-tracker-03.jpg', '/images/products/home-maintenance-tracker-04.jpg'],
+    video: '/videos/home-maintenance-tracker-loop.mp4',
     features: [
       'Repair cost tracking with automatic totals',
       'Photo evidence attached to each task',
@@ -350,6 +362,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/debt-payoff-guide-tracker-01.jpg',
+    gallery: ['/images/products/debt-payoff-guide-tracker-03.jpg', '/images/products/debt-payoff-guide-tracker-04.jpg'],
     features: [
       'Multi-debt tracker grid',
       'Progress tracking toward payoff',
@@ -375,6 +388,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/mindful-money-manager-01.jpg',
+    gallery: ['/images/products/mindful-money-manager-02.jpg', '/images/products/mindful-money-manager-03.jpg', '/images/products/mindful-money-manager-04.jpg'],
+    video: '/videos/mindful-money-manager-loop.mp4',
     features: [
       'Pause practice before spending',
       'Budget tracker',
@@ -400,6 +415,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/the-whole-picture-01.jpg',
+    gallery: ['/images/products/the-whole-picture-03.jpg', '/images/products/the-whole-picture-04.jpg'],
     features: [
       'Spending breakdown by month',
       'Bills due tracker',
@@ -425,6 +441,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/timetrue-01.jpg',
+    gallery: ['/images/products/timetrue-02.jpg', '/images/products/timetrue-03.jpg', '/images/products/timetrue-04.jpg'],
+    video: '/videos/timetrue-loop.mp4',
     features: [
       'Buffer method scheduling',
       'Voice braindump capture',
@@ -450,6 +468,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/writers-block-focus-timer-01.jpg',
+    gallery: ['/images/products/writers-block-focus-timer-03.jpg', '/images/products/writers-block-focus-timer-04.jpg'],
     features: [
       'Focused writing timer sessions',
       'Built for the blank-page moment',
@@ -474,6 +493,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/content-calendar-generator-01.jpg',
+    gallery: ['/images/products/content-calendar-generator-02.jpg', '/images/products/content-calendar-generator-03.jpg', '/images/products/content-calendar-generator-04.jpg'],
+    video: '/videos/content-calendar-generator-loop.mp4',
     features: [
       'Content pillar setup',
       'Calendar generation engine',
@@ -498,6 +519,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'fitness-wellness',
     status: 'coming-soon',
     image: '/images/products/plate-quest-01.jpg',
+    gallery: ['/images/products/plate-quest-02.jpg', '/images/products/plate-quest-03.jpg', '/images/products/plate-quest-04.jpg'],
+    video: '/videos/plate-quest-loop.mp4',
     features: [
       'Gamified food diary',
       'Quests and badges',
@@ -523,6 +546,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/wedding-week-planner-01.jpg',
+    gallery: ['/images/products/wedding-week-planner-02.jpg', '/images/products/wedding-week-planner-03.jpg', '/images/products/wedding-week-planner-04.jpg'],
+    video: '/videos/wedding-week-planner-loop.mp4',
     features: [
       'Week-by-week task lists',
       'Hour-by-hour day schedule',
@@ -548,6 +573,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/hen-shower-planner-01.jpg',
+    gallery: ['/images/products/hen-shower-planner-02.jpg', '/images/products/hen-shower-planner-03.jpg', '/images/products/hen-shower-planner-04.jpg'],
+    video: '/videos/hen-shower-planner-loop.mp4',
     features: [
       'Guest list',
       'Run-of-show schedule',
@@ -573,6 +600,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/clientflow-tracker-01.jpg',
+    gallery: ['/images/products/clientflow-02.jpg', '/images/products/clientflow-03.jpg', '/images/products/clientflow-04.jpg'],
+    video: '/videos/clientflow-loop.mp4',
     features: [
       'Kanban project board',
       'Client management',
@@ -599,6 +628,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/clientflow-tandem-01.jpg',
+    gallery: ['/images/products/clientflow-tandem-02.jpg', '/images/products/clientflow-tandem-03.jpg', '/images/products/clientflow-tandem-04.jpg'],
+    video: '/videos/clientflow-tandem-loop.mp4',
     badge: 'Premium',
     features: [
       'Everything in Clientflow Tracker',
@@ -625,6 +656,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/postplanned-01.jpg',
+    gallery: ['/images/products/postplanned-02.jpg', '/images/products/postplanned-03.jpg', '/images/products/postplanned-04.jpg'],
+    video: '/videos/postplanned-loop.mp4',
     features: [
       'Month and week calendar views',
       'Post editor with drag-to-queue',
@@ -650,6 +683,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/grounding-board-01.jpg',
+    gallery: ['/images/products/the-grounding-board-03.jpg', '/images/products/the-grounding-board-04.jpg'],
     features: [
       'Guided grounding exercises',
       'Sensory check-in',
@@ -675,6 +709,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/audhd-week-reset-01.jpg',
+    gallery: ['/images/products/audhd-week-reset-03.jpg', '/images/products/audhd-week-reset-04.jpg'],
     features: [
       'Structured weekly reset flow',
       'Built for AuDHD overwhelm patterns',
@@ -699,6 +734,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/social-battery-01.jpg',
+    gallery: ['/images/products/social-battery-calculator-03.jpg', '/images/products/social-battery-calculator-04.jpg'],
     features: [
       'Social battery tracking',
       'Drain and recharge logging',
@@ -723,6 +759,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/focus-guardian-01.jpg',
+    gallery: ['/images/products/focus-guardian-03.jpg', '/images/products/focus-guardian-04.jpg'],
     features: [
       'Body-doubling focus sessions',
       'Task-based timer',
@@ -747,6 +784,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'adhd-neurodivergent',
     status: 'coming-soon',
     image: '/images/products/exam-revision-timer-01.jpg',
+    gallery: ['/images/products/exam-revision-sprint-timer-03.jpg', '/images/products/exam-revision-sprint-timer-04.jpg'],
     features: [
       'Sprint-based revision timer',
       'Structured break cycles',
@@ -771,6 +809,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/decision-spinner-01.jpg',
+    gallery: ['/images/products/decision-spinner-03.jpg', '/images/products/decision-spinner-04.jpg'],
     features: [
       'Custom option lists',
       'Quick-spin decision tool',
@@ -795,6 +834,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'productivity-daily-life',
     status: 'coming-soon',
     image: '/images/products/fuel-log-01.jpg',
+    gallery: ['/images/products/fuel-log-03.jpg', '/images/products/fuel-log-04.jpg'],
     features: [
       'Fill-up and cost logging',
       'Consumption tracking over time',
@@ -819,6 +859,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'business-tools',
     status: 'coming-soon',
     image: '/images/products/business-idea-validator-01.jpg',
+    gallery: ['/images/products/business-idea-validator-03.jpg', '/images/products/business-idea-validator-04.jpg'],
     features: [
       'Structured idea validation framework',
       'Market and demand prompts',
@@ -843,6 +884,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'business-tools',
     status: 'coming-soon',
     image: '/images/products/business-launch-checklist-01.jpg',
+    gallery: ['/images/products/business-launch-checklist-03.jpg', '/images/products/business-launch-checklist-04.jpg'],
     features: [
       'Full pre-launch checklist',
       'Progress tracking',
@@ -867,6 +909,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'business-tools',
     status: 'coming-soon',
     image: '/images/products/client-onboarding-kit-01.jpg',
+    gallery: ['/images/products/client-onboarding-kit-03.jpg', '/images/products/client-onboarding-kit-04.jpg'],
     features: [
       'Repeatable onboarding workflow',
       'Client information tracking',
@@ -891,6 +934,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'business-tools',
     status: 'coming-soon',
     image: '/images/products/freelance-business-starter-01.jpg',
+    gallery: ['/images/products/freelance-business-starter-03.jpg', '/images/products/freelance-business-starter-04.jpg'],
     features: [
       'Freelance business setup tracker',
       'Operational admin structure',
@@ -915,6 +959,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'business-tools',
     status: 'coming-soon',
     image: '/images/products/pricing-calculator-01.jpg',
+    gallery: ['/images/products/pricing-calculator-03.jpg', '/images/products/pricing-calculator-04.jpg'],
     features: [
       'Cost-based pricing calculator',
       'Target income modelling',
@@ -939,6 +984,7 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'business-tools',
     status: 'coming-soon',
     image: '/images/products/simple-bookkeeping-01.jpg',
+    gallery: ['/images/products/simple-bookkeeping-03.jpg', '/images/products/simple-bookkeeping-04.jpg'],
     features: [
       'Income and expense tracking',
       'Running totals',
@@ -963,6 +1009,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'life-planning',
     status: 'coming-soon',
     image: '/images/products/the-empress-01.jpg',
+    gallery: ['/images/products/the-empress-02.jpg', '/images/products/the-empress-03.jpg', '/images/products/the-empress-04.jpg'],
+    video: '/videos/the-empress-loop.mp4',
     badge: 'Premium',
     features: [
       'Seven planning rooms in one app',
@@ -988,6 +1036,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'life-planning',
     status: 'coming-soon',
     image: '/images/products/bramble-and-ink-01.jpg',
+    gallery: ['/images/products/bramble-and-ink-02.jpg', '/images/products/bramble-and-ink-03.jpg', '/images/products/bramble-and-ink-04.jpg'],
+    video: '/videos/bramble-and-ink-loop.mp4',
     badge: 'Premium',
     features: [
       'Seven planning rooms in one app',
@@ -1226,6 +1276,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'speakers',
     status: 'coming-soon',
     image: '/images/products/speaker-01.jpg',
+    gallery: ['/images/products/speaker-02.jpg', '/images/products/speaker-03.jpg', '/images/products/speaker-04.jpg'],
+    video: '/videos/speaker-loop.mp4',
     mockupCount: 7,
     features: [
       'SiteFill™ visual editor built in',
@@ -1252,6 +1304,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'authors',
     status: 'coming-soon',
     image: '/images/products/author-press-kit-velvetheat-01.jpg',
+    gallery: ['/images/products/author-press-kit-velvetheat-02.jpg', '/images/products/author-press-kit-velvetheat-03.jpg', '/images/products/author-press-kit-velvetheat-04.jpg'],
+    video: '/videos/author-press-kit-velvetheat-loop.mp4',
     mockupCount: 7,
     features: [
       'SiteFill™ visual editor built in',
@@ -1278,6 +1332,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'authors',
     status: 'coming-soon',
     image: '/images/products/author-website-velvetheat-01.jpg',
+    gallery: ['/images/products/author-website-velvetheat-02.jpg', '/images/products/author-website-velvetheat-03.jpg', '/images/products/author-website-velvetheat-04.jpg'],
+    video: '/videos/author-website-velvetheat-loop.mp4',
     mockupCount: 7,
     features: [
       'SiteFill™ visual editor built in',
@@ -1330,6 +1386,8 @@ export const PRODUCTS: Product[] = [
     categorySlug: 'speakers',
     status: 'coming-soon',
     image: '/images/products/speaker-press-kit-01.jpg',
+    gallery: ['/images/products/speaker-press-kit-02.jpg', '/images/products/speaker-press-kit-03.jpg', '/images/products/speaker-press-kit-04.jpg'],
+    video: '/videos/speaker-press-kit-loop.mp4',
     mockupCount: 7,
     features: [
       'SiteFill™ visual editor built in',

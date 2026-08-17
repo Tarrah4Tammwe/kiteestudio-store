@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import type { Product } from '@/lib/products';
+import HoverMedia from './HoverMedia';
 
 export default function ProductCard({ product: p }: { product: Product }) {
   return (
     <Link href={`/products/${p.slug}`} className="product-card">
       <div className="product-card-img">
-        <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
+        <HoverMedia image={p.image} video={p.video} alt={p.name} sizes="(max-width:768px) 100vw, 33vw" />
         {p.badge && <span className="badge">{p.badge}</span>}
       </div>
       <div className="product-card-body">

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { APP_CATEGORIES, TEMPLATE_CATEGORIES, type Product } from '@/lib/products';
 
 type Filter = 'all' | 'apps' | 'templates';
@@ -83,26 +84,36 @@ export default function ShopClient({ products }: { products: Product[] }) {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '18px' }} className="grid-3">
                       {allAppsInCat.map(p => (
                         p.status === 'live' ? (
-                          <Link key={p.slug} href={`/products/${p.slug}`} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', padding: '28px 24px', display: 'flex', flexDirection: 'column', transition: 'border-color 0.3s, transform 0.2s', textDecoration: 'none' }} className="app-card">
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)' }}>{cat.label}</span>
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid var(--border-mid)', padding: '3px 8px' }}>Live</span>
+                          <Link key={p.slug} href={`/products/${p.slug}`} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', transition: 'border-color 0.3s, transform 0.2s', textDecoration: 'none' }} className="app-card">
+                            <div style={{ position: 'relative', aspectRatio: '1/1', width: '100%', overflow: 'hidden' }}>
+                              <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
                             </div>
-                            <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 600, color: 'var(--cream)', lineHeight: 1.2, marginBottom: '10px' }}>{p.name}</div>
-                            <div style={{ fontSize: '13px', color: 'var(--cream-dim)', lineHeight: 1.75, flex: 1, marginBottom: '20px' }}>{p.tagline}</div>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--gold)', letterSpacing: '0.04em' }}>£{p.price}</span>
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--gold)' }}>Get it →</span>
+                            <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)' }}>{cat.label}</span>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid var(--border-mid)', padding: '3px 8px' }}>Live</span>
+                              </div>
+                              <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 600, color: 'var(--cream)', lineHeight: 1.2, marginBottom: '10px' }}>{p.name}</div>
+                              <div style={{ fontSize: '13px', color: 'var(--cream-dim)', lineHeight: 1.75, flex: 1, marginBottom: '20px' }}>{p.tagline}</div>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--gold)', letterSpacing: '0.04em' }}>£{p.price}</span>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--gold)' }}>Get it →</span>
+                              </div>
                             </div>
                           </Link>
                         ) : (
-                          <div key={p.slug} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', padding: '28px 24px', display: 'flex', flexDirection: 'column', opacity: 0.55 }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)' }}>{cat.label}</span>
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: 'rgba(60,10,40,0.4)', color: 'var(--cream-muted)', border: '1px solid var(--border)', padding: '3px 8px' }}>Coming soon</span>
+                          <div key={p.slug} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', opacity: 0.55 }}>
+                            <div style={{ position: 'relative', aspectRatio: '1/1', width: '100%', overflow: 'hidden' }}>
+                              <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
                             </div>
-                            <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 600, color: 'var(--cream)', lineHeight: 1.2, marginBottom: '10px' }}>{p.name}</div>
-                            <div style={{ fontSize: '13px', color: 'var(--cream-dim)', lineHeight: 1.75, flex: 1 }}>{p.tagline}</div>
+                            <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--gold)' }}>{cat.label}</span>
+                                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: 'rgba(60,10,40,0.4)', color: 'var(--cream-muted)', border: '1px solid var(--border)', padding: '3px 8px' }}>Coming soon</span>
+                              </div>
+                              <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 600, color: 'var(--cream)', lineHeight: 1.2, marginBottom: '10px' }}>{p.name}</div>
+                              <div style={{ fontSize: '13px', color: 'var(--cream-dim)', lineHeight: 1.75, flex: 1 }}>{p.tagline}</div>
+                            </div>
                           </div>
                         )
                       ))}
@@ -140,19 +151,20 @@ export default function ShopClient({ products }: { products: Product[] }) {
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '18px' }} className="grid-3">
                       {catTemplates.map(p => (
-                        <Link key={p.slug} href={`/products/${p.slug}`} className="product-card">
-                          <div className="product-card-img">
+                        <Link key={p.slug} href={`/products/${p.slug}`} className="product-card" style={p.status !== 'live' ? { opacity: 0.65 } : undefined}>
+                          <div className="product-card-img" style={{ position: 'relative' }}>
                             {p.badge && <span className="badge">{p.badge}</span>}
-                            <div style={{ width: '100%', height: '100%', background: 'var(--black-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.2em', color: 'var(--gold-dim)', textTransform: 'uppercase' }}>Preview</span>
-                            </div>
+                            {p.status !== 'live' && (
+                              <span style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2, fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.1em', textTransform: 'uppercase', background: 'rgba(60,10,40,0.7)', color: 'var(--cream-muted)', border: '1px solid var(--border)', padding: '3px 8px' }}>Coming soon</span>
+                            )}
+                            <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
                           </div>
                           <div className="product-card-body">
                             <div className="product-card-cat">{p.categoryLabel}</div>
                             <div className="product-card-name">{p.name}</div>
                             <div className="product-card-tagline">{p.tagline}</div>
                             <div className="product-card-footer">
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--gold)', letterSpacing: '0.04em' }}>£{p.price}</span>
+                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--gold)', letterSpacing: '0.04em' }}>{p.status === 'live' ? `£${p.price}` : 'Coming soon'}</span>
                               <span className="product-card-cta">View →</span>
                             </div>
                           </div>

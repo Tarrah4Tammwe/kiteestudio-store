@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { PRODUCTS, APP_CATEGORIES, getAppsByCategory } from '@/lib/products';
 
@@ -219,19 +220,24 @@ export default function HomePage() {
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '18px' }} className="grid-3">
                   {apps.slice(0, 3).map(p => (
-                    <Link key={p.slug} href={`/products/${p.slug}`} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', padding: '28px', display: 'flex', flexDirection: 'column', gap: '12px', transition: 'border-color 0.3s', textDecoration: 'none' }} className="app-card">
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--gold)' }}>App</span>
-                        {p.status === 'live' ? (
-                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.12em', textTransform: 'uppercase', background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid var(--border-mid)', padding: '3px 8px' }}>Live</span>
-                        ) : (
-                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.12em', textTransform: 'uppercase', background: 'rgba(60,10,40,0.4)', color: 'var(--cream-muted)', border: '1px solid var(--border)', padding: '3px 8px' }}>Coming soon</span>
-                        )}
+                    <Link key={p.slug} href={`/products/${p.slug}`} style={{ background: 'var(--black-3)', border: '1px solid var(--border)', display: 'flex', flexDirection: 'column', transition: 'border-color 0.3s', textDecoration: 'none' }} className="app-card">
+                      <div style={{ position: 'relative', aspectRatio: '1/1', width: '100%', overflow: 'hidden' }}>
+                        <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 33vw" />
                       </div>
-                      <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 600, color: 'var(--cream)', lineHeight: 1.2 }}>{p.name}</div>
-                      <div style={{ fontSize: '13px', color: 'var(--cream-dim)', lineHeight: 1.7, flex: 1 }}>{p.tagline}</div>
-                      <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--gold)' }}>
-                        {p.status === 'live' ? 'Get it →' : 'Notify me →'}
+                      <div style={{ padding: '20px 24px 24px', display: 'flex', flexDirection: 'column', gap: '10px', flex: 1 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--gold)' }}>App</span>
+                          {p.status === 'live' ? (
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.12em', textTransform: 'uppercase', background: 'rgba(212,175,55,0.1)', color: 'var(--gold)', border: '1px solid var(--border-mid)', padding: '3px 8px' }}>Live</span>
+                          ) : (
+                            <span style={{ fontFamily: 'var(--font-mono)', fontSize: '8px', letterSpacing: '0.12em', textTransform: 'uppercase', background: 'rgba(60,10,40,0.4)', color: 'var(--cream-muted)', border: '1px solid var(--border)', padding: '3px 8px' }}>Coming soon</span>
+                          )}
+                        </div>
+                        <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 600, color: 'var(--cream)', lineHeight: 1.2 }}>{p.name}</div>
+                        <div style={{ fontSize: '13px', color: 'var(--cream-dim)', lineHeight: 1.7, flex: 1 }}>{p.tagline}</div>
+                        <div style={{ paddingTop: '16px', borderTop: '1px solid var(--border)', fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--gold)' }}>
+                          {p.status === 'live' ? 'Get it →' : 'Notify me →'}
+                        </div>
                       </div>
                     </Link>
                   ))}
@@ -260,11 +266,9 @@ export default function HomePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '18px' }} className="grid-4">
             {liveTemplates.slice(0, 4).map(p => (
               <Link key={p.slug} href={`/products/${p.slug}`} className="product-card">
-                <div className="product-card-img" style={{ aspectRatio: '4/3' }}>
+                <div className="product-card-img" style={{ aspectRatio: '4/3', position: 'relative' }}>
                   {p.badge && <span className="badge">{p.badge}</span>}
-                  <div style={{ width: '100%', height: '100%', background: 'var(--black-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '9px', letterSpacing: '0.2em', color: 'var(--gold-dim)', textTransform: 'uppercase' }}>{p.categoryLabel}</span>
-                  </div>
+                  <Image src={p.image} alt={p.name} fill style={{ objectFit: 'cover' }} sizes="(max-width:768px) 100vw, 25vw" />
                 </div>
                 <div className="product-card-body">
                   <div className="product-card-cat">{p.categoryLabel}</div>

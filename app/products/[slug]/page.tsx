@@ -19,6 +19,10 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description,
     alternates: { canonical: url },
+    // Coming-soon products are reachable via internal links but aren't
+    // finished listings yet — keep them out of search results until they
+    // go live, rather than indexing a thin/pre-launch page.
+    robots: p.status === 'live' ? undefined : { index: false, follow: true },
     openGraph: { title, description, url, images: [{ url: image, width: 900, height: 900, alt: p.name }], type: 'website' },
     twitter: { card: 'summary_large_image', title, description, images: [image] },
   };
@@ -50,8 +54,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       url: `https://kiteestudio.com/products/${p.slug}`,
       priceCurrency: 'GBP',
       price: p.price,
-      availability: 'https://schema.org/InStock',
+      availability: p.status === 'live' ? 'https://schema.org/InStock' : 'https://schema.org/PreOrder',
     },
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://kiteestudio.com' },
+      { '@type': 'ListItem', position: 2, name: p.productType === 'template' ? 'Templates' : 'Apps', item: `https://kiteestudio.com/shop#${p.productType === 'template' ? 'templates' : 'apps'}` },
+      { '@type': 'ListItem', position: 3, name: p.name, item: `https://kiteestudio.com/products/${p.slug}` },
+    ],
   };
 
   return (
@@ -63,6 +77,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         // sequences inside the JSON early, which desyncs SSR output from what
         // React expects to hydrate.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd).replace(/</g, '\\u003c') }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, '\\u003c') }}
       />
 
       {/* Breadcrumb */}

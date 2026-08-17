@@ -476,7 +476,7 @@ export const PRODUCTS: Product[] = [
       'No account, no subscription',
     ],
     seoTitle: 'Writers-Block Focus Timer — A Focus Timer for Writers',
-    seoDescription: 'A downloadable focus timer app built for writers. Offline, no subscription, no distractions.',
+    seoDescription: 'A downloadable focus timer app built for writers stuck at the blank page. Timed writing sprints, no generic productivity noise. Offline, no subscription.',
   },
 
   {
@@ -717,7 +717,7 @@ export const PRODUCTS: Product[] = [
       'Download once, yours forever',
     ],
     seoTitle: 'AuDHD Week Reset System — Weekly Reset App',
-    seoDescription: 'A downloadable weekly reset system built for AuDHD brains. Offline, no subscription.',
+    seoDescription: 'A downloadable weekly reset system for AuDHD brains that fall behind and need a real way back in — not another blank planner page. Offline, no subscription.',
   },
 
   {
@@ -742,7 +742,7 @@ export const PRODUCTS: Product[] = [
       'No account, no subscription',
     ],
     seoTitle: 'Social Battery Calculator — Track Your Social Capacity',
-    seoDescription: 'A downloadable social battery tracker for neurodivergent brains. Offline, no subscription.',
+    seoDescription: 'A downloadable social battery tracker for neurodivergent brains — log what drains and recharges you, get an honest read before you commit. Offline, no subscription.',
   },
 
   {
@@ -817,7 +817,7 @@ export const PRODUCTS: Product[] = [
       'No account, no subscription',
     ],
     seoTitle: 'Decision Spinner — Quick Decision-Making App',
-    seoDescription: 'A downloadable decision-making spinner for everyday choices. Offline, no subscription.',
+    seoDescription: 'A downloadable decision-making spinner for small everyday choices that eat up too much mental energy. Load your options, spin, move on. Offline, no subscription.',
   },
 
   {
@@ -867,7 +867,7 @@ export const PRODUCTS: Product[] = [
       'No account, no subscription',
     ],
     seoTitle: 'Business Idea Validator — Validate Before You Build',
-    seoDescription: 'A downloadable business idea validation tool. Offline, no subscription.',
+    seoDescription: 'A downloadable business idea validation tool — work through real market, cost, and demand questions before you spend time or money. Offline, no subscription.',
   },
 
   {
@@ -917,7 +917,7 @@ export const PRODUCTS: Product[] = [
       'No account, no subscription',
     ],
     seoTitle: 'Client Onboarding Kit — Repeatable Client Onboarding App',
-    seoDescription: 'A downloadable client onboarding tracker for service businesses. Offline, no subscription.',
+    seoDescription: 'A downloadable client onboarding tracker for service businesses — the same solid first impression, every single time. Offline, no subscription.',
   },
 
   {
@@ -992,7 +992,7 @@ export const PRODUCTS: Product[] = [
       'No account, no subscription',
     ],
     seoTitle: 'Simple Bookkeeping — Income & Expense Tracker for Small Business',
-    seoDescription: 'A downloadable simple bookkeeping tool for small and solo businesses. Offline, no subscription.',
+    seoDescription: 'A downloadable bookkeeping tool for small businesses — track income and expenses and see where you stand, no accounting software needed. Offline, no subscription.',
   },
 
   {
@@ -1019,7 +1019,7 @@ export const PRODUCTS: Product[] = [
       'No account, no subscription',
     ],
     seoTitle: 'The Empress — Full Life Planner App',
-    seoDescription: 'A downloadable 7-room full life planner. Offline, no subscription, yours forever.',
+    seoDescription: 'A downloadable 7-room full life planner in a jewel-toned design — every area of life in one offline app. For people who\'ve outgrown a single-purpose tracker.',
   },
 
   {
@@ -1046,7 +1046,7 @@ export const PRODUCTS: Product[] = [
       'No account, no subscription',
     ],
     seoTitle: 'Bramble & Ink — A Wildwood Almanac Life Planner',
-    seoDescription: 'A downloadable grungy-fairycore full life planner. Offline, no subscription, yours forever.',
+    seoDescription: 'A downloadable 7-room full life planner in a grungy-fairycore, nightshade-and-parchment design — the same planning structure as The Empress, reimagined.',
   },
 
   // ── SITEFILL TEMPLATES ────────────────────────────────────────────────────
@@ -1231,7 +1231,7 @@ export const PRODUCTS: Product[] = [
       'Expanded transformation gallery',
       'FAQ section',
     ],
-    seoTitle: 'Personal Trainer Premium Website Template — SiteFill™ by KiTee Studio',
+    seoTitle: 'Personal Trainer Premium Website Template — KiTee Studio',
     seoDescription: 'The premium personal trainer website template. Video hero, testimonial slider, FAQs, and more. No code, no subscription.',
   },
 
@@ -1314,7 +1314,7 @@ export const PRODUCTS: Product[] = [
       'Press-ready contact details',
       'One-click download — no hosting needed',
     ],
-    seoTitle: 'Author Press Kit Website Template (VelvetHeat) — SiteFill™ by KiTee Studio',
+    seoTitle: 'Author Press Kit Template (VelvetHeat) — KiTee Studio',
     seoDescription: 'A moody, romantic author press kit website template with a built-in editor. Edit live, download, publish anywhere. No code, no subscription.',
   },
 

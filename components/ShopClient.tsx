@@ -2,17 +2,26 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 import { APP_CATEGORIES, TEMPLATE_CATEGORIES, type Product } from '@/lib/products';
 
 type Filter = 'all' | 'apps' | 'templates';
 
 export default function ShopClient({ products }: { products: Product[] }) {
+  const searchParams = useSearchParams();
   const [filter, setFilter] = useState<Filter>('all');
+  const [query, setQuery] = useState(searchParams.get('q') || '');
+
+  const q = query.trim().toLowerCase();
+  const matchesQuery = (p: Product) =>
+    !q || [p.name, p.tagline, p.description, p.categoryLabel].join(' ').toLowerCase().includes(q);
 
   const showApps = filter === 'all' || filter === 'apps';
   const showTemplates = filter === 'all' || filter === 'templates';
-  const templates = products.filter(p => p.productType === 'template');
-  const getAppsByCategory = (cat: string) => products.filter(p => p.productType === 'app' && p.category === cat);
+  const searchedProducts = products.filter(matchesQuery);
+  const templates = searchedProducts.filter(p => p.productType === 'template');
+  const getAppsByCategory = (cat: string) => searchedProducts.filter(p => p.productType === 'app' && p.category === cat);
+  const noResults = q.length > 0 && searchedProducts.length === 0;
 
   return (
     <>
@@ -29,9 +38,9 @@ export default function ShopClient({ products }: { products: Product[] }) {
         </div>
       </div>
 
-      {/* Sticky top-level filter */}
+      {/* Sticky top-level filter + search */}
       <div style={{ position: 'sticky', top: 'var(--nav-h)', zIndex: 50, background: 'rgba(6,3,10,0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)' }}>
-        <div className="container">
+        <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '4px' }}>
           <div style={{ display: 'flex', gap: '0' }}>
             {([['all', 'Everything'], ['apps', 'Utility Apps'], ['templates', 'SiteFill™ Templates']] as [Filter, string][]).map(([id, label]) => (
               <button key={id} onClick={() => setFilter(id)} style={{
@@ -46,10 +55,38 @@ export default function ShopClient({ products }: { products: Product[] }) {
               </button>
             ))}
           </div>
+          <div style={{ position: 'relative', margin: '12px 0' }}>
+            <input
+              type="search"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search products…"
+              aria-label="Search products"
+              style={{
+                background: 'var(--black-3)', border: '1px solid var(--border-mid)', borderRadius: '20px',
+                padding: '9px 16px 9px 34px', width: '220px', maxWidth: '60vw',
+                fontFamily: 'var(--font-mono)', fontSize: '11px', color: 'var(--cream)',
+                outline: 'none',
+              }}
+            />
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style={{ position: 'absolute', left: '13px', top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}>
+              <circle cx="11" cy="11" r="7" stroke="#8A7A60" strokeWidth="2" />
+              <line x1="16.5" y1="16.5" x2="21" y2="21" stroke="#8A7A60" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </div>
         </div>
       </div>
 
       <div style={{ background: 'var(--black)', paddingBottom: '96px' }}>
+
+        {noResults && (
+          <div className="container" style={{ padding: '72px 0', textAlign: 'center' }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: '24px', color: 'var(--cream)', marginBottom: '10px' }}>
+              No results for &ldquo;{query}&rdquo;
+            </div>
+            <p style={{ fontSize: '14px', color: 'var(--cream-dim)' }}>Try a different search, or browse everything below.</p>
+          </div>
+        )}
 
         {/* ── UTILITY APPS ── */}
         {showApps && (

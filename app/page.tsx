@@ -61,8 +61,8 @@ export default function HomePage() {
         </svg>
         <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '400px', height: '400px', borderRadius: '50%', background: 'radial-gradient(circle,rgba(212,175,55,0.07) 0%,transparent 70%)', pointerEvents: 'none' }}/>
 
-        <div className="container" style={{ position: 'relative', zIndex: 2, padding: '80px 48px' }}>
-          <div style={{ maxWidth: '760px' }}>
+        <div className="container" style={{ position: 'relative', zIndex: 2, padding: '80px 48px', display: 'flex', alignItems: 'center', gap: '40px' }}>
+          <div style={{ maxWidth: '640px', flex: '1 1 480px' }}>
             <div className="eyebrow">KiTee Studio — Digital Products</div>
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(52px,7vw,100px)', fontWeight: 300, lineHeight: 0.95, letterSpacing: '0.01em', color: 'var(--cream)', marginBottom: '8px' }}>
               I find the problem.
@@ -93,6 +93,18 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+
+          {/* Floating hero video — one real product, front and centre */}
+          <div className="hero-float" style={{ flex: '0 0 440px' }}>
+            <div className="hero-float-glow" />
+            <div className="hero-float-phone">
+              <div className="hero-float-notch" />
+              <video src="/videos/gym-tracker-loop.mp4" autoPlay loop muted playsInline preload="auto" aria-label="Gym Tracker app in use" />
+            </div>
+            <div className="hero-float-tag">
+              <span className="dot" /> LIVE PRODUCT — GYM TRACKER
+            </div>
+          </div>
         </div>
       </section>
 
@@ -104,6 +116,32 @@ export default function HomePage() {
           ))}
         </div>
       </div>
+
+      {/* ── SEE IT IN ACTION ── */}
+      <section style={{ padding: '96px 0', background: 'var(--black)', borderBottom: '1px solid var(--border)' }}>
+        <div className="container" style={{ display: 'flex', gap: '56px', alignItems: 'center', flexWrap: 'wrap' }}>
+          <div style={{ flex: '1 1 380px' }}>
+            <div className="eyebrow">See It In Action</div>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px,3.5vw,44px)', fontWeight: 300, color: 'var(--cream)', lineHeight: 1.1, marginBottom: '16px' }}>
+              Real screens. <em style={{ fontStyle: 'italic', color: 'var(--gold-pure)' }}>Real product.</em>
+            </h2>
+            <p style={{ fontSize: '15px', color: 'var(--cream-dim)', lineHeight: 1.8, maxWidth: '440px' }}>
+              Every product in the shop is a real, working app — not a mockup. This is Clientflow, KiTee Studio&apos;s client and project tracker, running live.
+            </p>
+            <Link href="/products/clientflow-tracker" className="btn-outline" style={{ marginTop: '28px', display: 'inline-block' }}>View Clientflow →</Link>
+          </div>
+          <div style={{ flex: '1 1 480px', position: 'relative' }}>
+            <div style={{ borderRadius: '14px', overflow: 'hidden', border: '1px solid var(--border-mid)', boxShadow: '0 40px 80px rgba(0,0,0,0.5)' }}>
+              <div style={{ background: '#18131F', padding: '10px 14px', display: 'flex', gap: '6px' }}>
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#E86A5A' }} />
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#E6C45A' }} />
+                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#78C88C' }} />
+              </div>
+              <video src="/videos/clientflow-loop.mp4" autoPlay loop muted playsInline preload="auto" style={{ width: '100%', display: 'block' }} aria-label="Clientflow client and project tracker in use" />
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* ── WHY THIS EXISTS ── */}
       <section id="why" style={{ padding: '96px 0', background: 'var(--black-3)', borderBottom: '1px solid var(--border)' }}>

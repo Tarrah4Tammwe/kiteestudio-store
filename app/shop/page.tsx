@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { getLiveProducts } from '@/lib/db';
 import ShopClient from '@/components/ShopClient';
@@ -16,5 +17,9 @@ export const metadata: Metadata = {
 
 export default async function ShopPage() {
   const products = await getLiveProducts();
-  return <ShopClient products={products} />;
+  return (
+    <Suspense fallback={null}>
+      <ShopClient products={products} />
+    </Suspense>
+  );
 }

@@ -91,7 +91,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
                             <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 600, color: 'var(--cream)', lineHeight: 1.2, marginBottom: '10px' }}>{p.name}</div>
                             <div style={{ fontSize: '13px', color: 'var(--cream-dim)', lineHeight: 1.75, flex: 1, marginBottom: '20px' }}>{p.tagline}</div>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--cream-muted)', letterSpacing: '0.08em' }}>Price set by admin</span>
+                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--gold)', letterSpacing: '0.04em' }}>£{p.price}</span>
                               <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--gold)' }}>Get it →</span>
                             </div>
                           </Link>
@@ -152,7 +152,7 @@ export default function ShopClient({ products }: { products: Product[] }) {
                             <div className="product-card-name">{p.name}</div>
                             <div className="product-card-tagline">{p.tagline}</div>
                             <div className="product-card-footer">
-                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', color: 'var(--cream-muted)', letterSpacing: '0.08em' }}>SiteFill™</span>
+                              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '13px', color: 'var(--gold)', letterSpacing: '0.04em' }}>£{p.price}</span>
                               <span className="product-card-cta">View →</span>
                             </div>
                           </div>

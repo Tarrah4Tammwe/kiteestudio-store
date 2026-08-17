@@ -70,7 +70,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="container" style={{ padding: '14px 48px' }}>
           <nav style={{ fontFamily: 'var(--font-mono)', fontSize: '10px', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--cream-muted)', display: 'flex', gap: '8px', alignItems: 'center' }}>
             <Link href="/">Home</Link><span>›</span>
-            <Link href="/shop">Templates</Link><span>›</span>
+            <Link href="/shop">{p.productType === 'template' ? 'Templates' : 'Apps'}</Link><span>›</span>
             <span style={{ color: 'var(--cream-dim)' }}>{p.name}</span>
           </nav>
         </div>
